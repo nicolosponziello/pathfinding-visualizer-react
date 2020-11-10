@@ -1,43 +1,63 @@
-import React from "react";
-import { SQUARE_HEIGHT, SQUARE_WIDTH } from "../constants";
+import React, {useState} from "react";
+import { H_CELLS_NUM, SQUARE_WIDTH, V_CELLS_NUM } from "../constants";
 import { NodeState } from "../NodeState";
-interface Props {
-  grid: Array<Array<NodeState>>;
+import Node from "./Node/node.component";
+import {produce} from 'immer';
+
+interface Props {}
+
+const generateEmptyGrid = () => {
+  var grid = Array<Array<NodeState>>();
+  for(var i = 0; i < V_CELLS_NUM; i++){
+    var el = [];
+    for(var j = 0; j < H_CELLS_NUM; j++){
+      el.push(NodeState.BLANK);
+    }
+    grid.push(el);
+  }
+  return grid;
 }
 
 export const Grid = (props: Props) => {
-  var elements: any = [];
-  props.grid.forEach((r) => {
-    r.forEach((el) => {
-      console.log("timeout");
-      var color = "white";
-      if (el == NodeState.DISCOVERED) {
-        color = "blue";
-      }
-      if (el == NodeState.VISITED) {
-        color = "green";
-      }
-      elements.push(
-        <div
-          key={Math.random()}
-          style={{
-            width: SQUARE_WIDTH,
-            height: SQUARE_HEIGHT,
-            border: "1px solid black",
-            display: "inline-block",
-            margin: 0,
-            padding: 0,
-            backgroundColor: color,
-          }}
-        ></div>
-      );
-    });
-    elements.push(<br />);
+  const [grid, setGrid] = useState(() => {
+    return generateEmptyGrid();
   });
+  
   return (
     <>
       <p>Grid</p>
-      <div style={{ textAlign: "center" }}>{elements}</div>
+      <div
+       style={{
+        display: "grid",
+        gridTemplateColumns: `repeat(${H_CELLS_NUM.toFixed(0)}, ${SQUARE_WIDTH}px)`,
+      }}
+      >
+        {
+          grid.map((row, i) => {
+            return row.map((col, j) => {
+              return (
+                <Node 
+                  key={`${i}-${j}`} 
+                  state={col}
+                  selectStart={() =>{
+                    console.log(i, j, 'start');
+                    var newGrid = produce(grid, copy => {
+                      copy[i][j] = NodeState.START;
+                    });
+                    setGrid(newGrid);
+                  }}
+                  selectEnd={() => {
+                    console.log(i, j, 'end');
+                    var newGrid = produce(grid, copy => {
+                      copy[i][j] = NodeState.END;
+                    });
+                    setGrid(newGrid);
+                  }} />
+              );
+            });
+          })
+        }
+      </div>
     </>
   );
 };

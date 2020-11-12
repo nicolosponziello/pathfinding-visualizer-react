@@ -11,4 +11,28 @@
 }
 .visited {
     background-color: aquamarine;
+    animation-name: visiting;
+    animation-duration: 0.75s;
+}
+
+@keyframes visiting {
+    0% {
+        background-color: transparent;
+    }
+    25% {
+        background-color: yellow;
+        opacity: 0.25;
+    }
+    50%{
+        background-color: yellowgreen;
+        opacity: 0.5;
+    }
+    75%{
+        background-color: aquamarine;
+        opacity: 0.75;
+    }
+    100%{
+        background-color: aquamarine;
+        opacity: 1;
+    }
 }

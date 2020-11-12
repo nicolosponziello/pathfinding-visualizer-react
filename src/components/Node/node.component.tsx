@@ -1,46 +1,44 @@
 import React from "react";
 import { SQUARE_WIDTH, SQUARE_HEIGHT } from "../../constants";
-import { NodeState } from "../../NodeState";
+import "./node.styles.css";
+import { CellType } from "./node_data";
 interface Props {
-  state: NodeState;
-  selectStart(): void;
-  selectEnd(): void;
+  row: number;
+  col: number;
+  type: CellType;
+  mouseDown: Function;
+  mouseEnter: Function;
+  mouseLeave: Function;
+  mouseUp: Function;
 }
 
 const Node = (props: Props) => {
-  var color = "";
-  switch (props.state) {
-    case NodeState.BLANK:
-      color = "transparent";
+  var cssClass = "";
+  switch    (props.type)    {
+    case CellType.EMPTY:
       break;
-    case NodeState.DISCOVERED:
-      color = "lightblue";
+    case CellType.START:
+      cssClass = "start";
       break;
-    case NodeState.END:
-      color = "red";
+    case CellType.END:
+      cssClass = "end";
       break;
-    case NodeState.START:
-      color = "green";
-      break;
-    case NodeState.VISITED:
-      color = "purple";
+    case CellType.WALL:
+      cssClass = "wall";
       break;
   }
+  if (cssClass == "wall") console.log(cssClass);
   return (
     <div
-      onContextMenu={(e) => e.preventDefault()}
-      onMouseDown={(e) => {
-        if (e.button === 0) {
-          props.selectStart();
-        } else if (e.button === 2) {
-          props.selectEnd();
-        }
-      }}
+      onMouseDown={() => props.mouseDown()}
+      onMouseEnter={() => props.mouseEnter()}
+      onMouseLeave={() => props.mouseLeave()}
+      onMouseUp={() => props.mouseUp()}
+      className={`${cssClass}`}
       style={{
         width: SQUARE_WIDTH,
         height: SQUARE_HEIGHT,
         border: "1px solid black",
-        backgroundColor: color,
       }}
     />
   );

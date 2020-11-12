@@ -63,89 +63,91 @@ export const Grid = (props: Props) => {
         start
       </button>
       <button onClick={() => setRunning(false)}>stop</button>
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: `repeat(${H_CELLS_NUM.toFixed(
-            0
-          )}, ${SQUARE_WIDTH}px)`,
-        }}
-      >
-        {grid.map((row, i) => {
-          return row.map((col, j) => {
-            return (
-              <Node
-                key={`${i}-${j}`}
-                row={i}
-                col={j}
-                type={col.type}
-                mouseDown={() => {
-                  if (col.type === CellType.START) {
-                    setIsDraggingStart(true);
-                  } else if (col.type == CellType.END) {
-                    setIsDraggingEnd(true);
-                  } else {
-                    setGrid((g) => {
-                      return produce(g, (copy) => {
-                        if (copy[i][j].type === CellType.EMPTY) {
-                          copy[i][j].type = CellType.WALL;
-                        } else if (copy[i][j].type === CellType.WALL) {
+      <div className="container">
+        <div
+          style={{
+            display: "grid",
+            gridTemplateColumns: `repeat(${H_CELLS_NUM.toFixed(
+              0
+            )}, ${SQUARE_WIDTH}px)`,
+          }}
+        >
+          {grid.map((row, i) => {
+            return row.map((col, j) => {
+              return (
+                <Node
+                  key={`${i}-${j}`}
+                  row={i}
+                  col={j}
+                  type={col.type}
+                  mouseDown={() => {
+                    if (col.type === CellType.START) {
+                      setIsDraggingStart(true);
+                    } else if (col.type == CellType.END) {
+                      setIsDraggingEnd(true);
+                    } else {
+                      setGrid((g) => {
+                        return produce(g, (copy) => {
+                          if (copy[i][j].type === CellType.EMPTY) {
+                            copy[i][j].type = CellType.WALL;
+                          } else if (copy[i][j].type === CellType.WALL) {
+                            copy[i][j].type = CellType.EMPTY;
+                          }
+                        });
+                      });
+                      setIsDraggingWall(true);
+                    }
+                  }}
+                  mouseEnter={() => {
+                    if (isDraggingStart) {
+                      setGrid((g) => {
+                        return produce(g, (copy) => {
+                          copy[i][j].type = CellType.START;
+                        });
+                      });
+                    } else if (isDraggingEnd) {
+                      setGrid((g) => {
+                        return produce(g, (copy) => {
+                          copy[i][j].type = CellType.END;
+                        });
+                      });
+                    } else if (isDraggingWall) {
+                      setGrid((g) => {
+                        return produce(g, (copy) => {
+                          if (copy[i][j].type === CellType.EMPTY) {
+                            copy[i][j].type = CellType.WALL;
+                          } else if (copy[i][j].type === CellType.WALL) {
+                            copy[i][j].type = CellType.EMPTY;
+                          }
+                        });
+                      });
+                    }
+                  }}
+                  mouseLeave={() => {
+                    if (isDraggingStart || isDraggingEnd) {
+                      setGrid((g) => {
+                        return produce(g, (copy) => {
                           copy[i][j].type = CellType.EMPTY;
-                        }
+                        });
                       });
-                    });
-                    setIsDraggingWall(true);
-                  }
-                }}
-                mouseEnter={() => {
-                  if (isDraggingStart) {
-                    setGrid((g) => {
-                      return produce(g, (copy) => {
-                        copy[i][j].type = CellType.START;
-                      });
-                    });
-                  } else if (isDraggingEnd) {
-                    setGrid((g) => {
-                      return produce(g, (copy) => {
-                        copy[i][j].type = CellType.END;
-                      });
-                    });
-                  } else if (isDraggingWall) {
-                    setGrid((g) => {
-                      return produce(g, (copy) => {
-                        if (copy[i][j].type === CellType.EMPTY) {
-                          copy[i][j].type = CellType.WALL;
-                        } else if (copy[i][j].type === CellType.WALL) {
-                          copy[i][j].type = CellType.EMPTY;
-                        }
-                      });
-                    });
-                  }
-                }}
-                mouseLeave={() => {
-                  if (isDraggingStart || isDraggingEnd) {
-                    setGrid((g) => {
-                      return produce(g, (copy) => {
-                        copy[i][j].type = CellType.EMPTY;
-                      });
-                    });
-                  }
-                }}
-                mouseUp={() => {
-                  if (isDraggingStart) {
-                    setStartCoord({ r: i, c: j });
-                    setIsDraggingStart(false);
-                  } else if (isDraggingEnd) {
-                    setEndCoord({ r: i, c: j });
-                    setIsDraggingEnd(false);
-                  } else if (isDraggingWall) {
-                    setIsDraggingWall(false);
-                  }
-                }}
-              />
-            );
-          });
-        })}
+                    }
+                  }}
+                  mouseUp={() => {
+                    if (isDraggingStart) {
+                      setStartCoord({ r: i, c: j });
+                      setIsDraggingStart(false);
+                    } else if (isDraggingEnd) {
+                      setEndCoord({ r: i, c: j });
+                      setIsDraggingEnd(false);
+                    } else if (isDraggingWall) {
+                      setIsDraggingWall(false);
+                    }
+                  }}
+                />
+              );
+            });
+          })}
+        </div>
       </div>
     </>
   );

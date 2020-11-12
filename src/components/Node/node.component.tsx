@@ -42,7 +42,7 @@ const Node = (props: Props) => {
         width: SQUARE_WIDTH,
         height: SQUARE_HEIGHT,
         border: "1px solid black",
-        borderRadius: "10px",
+        borderRadius: "7px",
       }}
     />
   );

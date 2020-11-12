@@ -7,8 +7,8 @@ export default function dijkstra(
   end: Coordinate
 ): Array<Coordinate> {
   var shortestPath = [];
-  var orderOfExamination = [];
-  var nodesLeftToExamine = grid;
+  var orderOfExamination = Array<Coordinate>();
+  var discoveredNodes = Array<Coordinate>();
   var dist = [];
   var found = false;
   //initialize dist matrix
@@ -23,66 +23,68 @@ export default function dijkstra(
     }
     dist.push(tmp);
   }
-  var currentNode: Coordinate = { r: 0, c: 0 };
-  currentNode.c = start.c;
-  currentNode.r = start.r;
+  var currentNode: Coordinate = { r: start.r, c: start.c };
   while (!found) {
-    orderOfExamination.push(currentNode);
+    if (currentNode.r === end.r && currentNode.c === end.c) {
+      found = true;
+    }
     //check all sourroundings and set distance 1
-    let direction = [];
+    console.log('current: ', currentNode);  
     //check top
     if (
       currentNode.r - 1 >= 0 &&
-      dist[currentNode.r - 1][currentNode.c] > 1 &&
+      dist[currentNode.r - 1][currentNode.c] > dist[currentNode.r][currentNode.c] + 1 &&
       grid[currentNode.r - 1][currentNode.c].type != CellType.WALL
     ) {
-      dist[currentNode.r - 1][currentNode.c] = 1;
+      dist[currentNode.r - 1][currentNode.c] = dist[currentNode.r][currentNode.c] + 1;
       orderOfExamination.push({ r: currentNode.r - 1, c: currentNode.c });
-      direction.push({ r: -1, c: 0 });
+      discoveredNodes.push({r: currentNode.r -1, c: currentNode.c});
+      if (currentNode.r -1 === end.r && currentNode.c === end.c) {
+        found = true;
+      }
     }
     //check right
     if (
       currentNode.c + 1 < grid[0].length &&
-      dist[currentNode.r][currentNode.c + 1] > 1 &&
+      dist[currentNode.r][currentNode.c + 1] > dist[currentNode.r][currentNode.c] + 1 &&
       grid[currentNode.r][currentNode.c + 1].type != CellType.WALL
     ) {
-      dist[currentNode.r][currentNode.c + 1] = 1;
+      dist[currentNode.r][currentNode.c + 1] = dist[currentNode.r][currentNode.c] + 1;
       orderOfExamination.push({ r: currentNode.r, c: currentNode.c + 1 });
-      direction.push({ r: 0, c: +1 });
+      discoveredNodes.push({r: currentNode.r, c: currentNode.c + 1});
+      if (currentNode.r === end.r && currentNode.c + 1 === end.c) {
+        found = true;
+      }
     }
     //check bottom
     if (
       currentNode.r + 1 < grid.length &&
-      dist[currentNode.r + 1][currentNode.c] > 1 &&
+      dist[currentNode.r + 1][currentNode.c] > dist[currentNode.r][currentNode.c] + 1 &&
       grid[currentNode.r + 1][currentNode.c].type != CellType.WALL
     ) {
-      dist[currentNode.r + 1][currentNode.c] = 1;
+      dist[currentNode.r + 1][currentNode.c] = dist[currentNode.r][currentNode.c] + 1;
       orderOfExamination.push({ r: currentNode.r + 1, c: currentNode.c });
-      direction.push({ r: +1, c: 0 });
+      discoveredNodes.push({r: currentNode.r + 1, c: currentNode.c});
+      if (currentNode.r + 1 === end.r && currentNode.c === end.c) {
+        found = true;
+      }
     }
     //check left
     if (
       currentNode.c - 1 >= 0 &&
-      dist[currentNode.r][currentNode.c - 1] > 1 &&
+      dist[currentNode.r][currentNode.c - 1] > dist[currentNode.r][currentNode.c] + 1 &&
       grid[currentNode.r][currentNode.c - 1].type != CellType.WALL
     ) {
-      dist[currentNode.r][currentNode.c - 1] = 1;
+      dist[currentNode.r][currentNode.c - 1] = dist[currentNode.r][currentNode.c] + 1;
       orderOfExamination.push({ r: currentNode.r, c: currentNode.c - 1 });
-      direction.push({ r: 0, c: -1 });
+      discoveredNodes.push({r: currentNode.r, c: currentNode.c - 1});
+      if (currentNode.r === end.r && currentNode.c - 1 === end.c) {
+        found = true;
+      }
     }
 
-    //pick a random direction
-    let randomIndex = direction.length - 1; //randomInteger(0, direction.length - 1);
-    let randomDirection = direction[randomIndex]; //
-    console.log("random", randomDirection, randomIndex, direction);
-
-    //apply direction
-    currentNode.c += randomDirection.c;
-    currentNode.r += randomDirection.r;
-
-    if (currentNode.r === end.r && currentNode.c === end.c) {
-      found = true;
-    }
+    currentNode = discoveredNodes.shift()!;
   }
+  orderOfExamination.pop();
   return orderOfExamination;
 }

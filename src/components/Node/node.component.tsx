@@ -14,7 +14,7 @@ interface Props {
 
 const Node = (props: Props) => {
   var cssClass = "";
-  switch    (props.type)    {
+  switch (props.type) {
     case CellType.EMPTY:
       break;
     case CellType.START:
@@ -25,6 +25,9 @@ const Node = (props: Props) => {
       break;
     case CellType.WALL:
       cssClass = "wall";
+      break;
+    case CellType.VISITED:
+      cssClass = "visited";
       break;
   }
   if (cssClass == "wall") console.log(cssClass);
@@ -39,6 +42,7 @@ const Node = (props: Props) => {
         width: SQUARE_WIDTH,
         height: SQUARE_HEIGHT,
         border: "1px solid black",
+        borderRadius: "10px",
       }}
     />
   );

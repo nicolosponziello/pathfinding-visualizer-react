@@ -9,4 +9,10 @@ export enum CellType {
   EMPTY,
   START,
   END,
+  VISITED,
 }
+
+export type Coordinate = {
+  r: number;
+  c: number;
+};

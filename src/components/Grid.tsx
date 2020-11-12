@@ -1,9 +1,9 @@
 import React, { useCallback, useRef, useState } from "react";
 import { H_CELLS_NUM, SQUARE_WIDTH, V_CELLS_NUM } from "../constants";
-import { NodeState } from "../NodeState";
 import Node from "./Node/node.component";
 import {produce} from 'immer';
-import {GridNode, CellType} from "./Node/node_data";
+import { GridNode, CellType, Coordinate } from "./Node/node_data";
+import dijkstra from "../algorithms/dijkstra";
 
 interface Props {}
 
@@ -32,36 +32,52 @@ export const Grid = (props: Props) => {
   });
   const [startCoord, setStartCoord] = useState({r: 5, c: 5});
   const [endCoord, setEndCoord] = useState({r: grid.length - 5, c: grid[0].length -5});
+  const [algoResult, setAlgoResult] = useState<Array<Coordinate>>([]);
   const [isDraggingStart, setIsDraggingStart] = useState(false);
   const [isDraggingEnd, setIsDraggingEnd] = useState(false);
   const [isDraggingWall, setIsDraggingWall] = useState(false);
-
+  const [animationIndex, setAnimationIndex] = useState(0);
   const [running, setRunning] = useState(false);
   const runningRef = useRef(running);
   runningRef.current = running;
 
-  const run = useCallback(() => {
-    let i = 0;
+  const runAnimation = useCallback(async () => {
+    
     if (!runningRef.current) {
-      console.log('completed animation', i);
+      setAnimationIndex(0);
       return;
     }
-    setGrid((g) => {
-      return produce(g, (copy) => {
+    for(var i = 0; i < algoResult.length; i++){
+      console.log('coloring cell', algoResult[i].r, algoResult[i].c)
+      setGrid((g) => {
+        return produce(g, (copy) => {
+          copy[algoResult[i].r][algoResult[i].c].type =
        
+                CellType.VISITED;
+        });
       });
-    });
-    setTimeout(run, 50);
+      await new Promise(r => setTimeout(r, 500));
+    }    
   }, []);
 
   return (
     <>
       <p>Grid</p>
       <button
-        onClick={() => {
+        onClick={async () => {
           setRunning(true);
-          runningRef.current = true;
-          run();
+          let res = dijkstra(grid, startCoord, endCoord);
+          for(var i = 0; i < res.length; i++){
+            console.log('coloring cell', res[i].r, res[i].c)
+            setGrid((g) => {
+              return produce(g, (copy) => {
+                copy[res[i].r][res[i].c].type =
+             
+                      CellType.VISITED;
+              });
+            });
+            await new Promise(r => setTimeout(r, 20));
+          }    
         }}
       >
         start

@@ -85,15 +85,18 @@ export const Grid = (props: Props) => {
                 col={j}
                type={col.type}
                 mouseDown={() => {
-                  if(col.type === CellType.START){
+                  if (col.type === CellType.START) {
                     setIsDraggingStart(true);
-                  }else if(col.type == CellType.END){
+                  } else if (col.type == CellType.END) {
                     setIsDraggingEnd(true);
                   } else {
-                    console.log('start dragging wall');
-                    setGrid(g => {
+                    setGrid((g) => {
                       return produce(g, (copy) => {
-                        copy[i][j].type = CellType.WALL;
+                        if (copy[i][j].type === CellType.EMPTY) {
+                          copy[i][j].type = CellType.WALL;
+                        } else if (copy[i][j].type === CellType.WALL) {
+                          copy[i][j].type = CellType.EMPTY;
+                        }
                       });
                     });
                     setIsDraggingWall(true);
@@ -101,25 +104,28 @@ export const Grid = (props: Props) => {
                   
                 }}
                 mouseEnter={() => {
-                  if(isDraggingStart){
-                    setGrid(g => {
+                  if (isDraggingStart) {
+                    setGrid((g) => {
                       return produce(g, (copy) => {
                         copy[i][j].type = CellType.START;
                       });
-                    })
-                  }else if(isDraggingEnd){
-                    setGrid(g => {
+                    });
+                  } else if (isDraggingEnd) {
+                    setGrid((g) => {
                       return produce(g, (copy) => {
                         copy[i][j].type = CellType.END;
                       });
-                    })
-                  } else if(isDraggingWall){
-                    console.log('new wall')
-                    setGrid(g => {
+                    });
+                  } else if (isDraggingWall) {
+                    setGrid((g) => {
                       return produce(g, (copy) => {
-                        copy[i][j].type = CellType.WALL;
+                        if (copy[i][j].type === CellType.EMPTY) {
+                          copy[i][j].type = CellType.WALL;
+                        } else if (copy[i][j].type === CellType.WALL) {
+                          copy[i][j].type = CellType.EMPTY;
+                        }
                       });
-                    })
+                    });
                   }
                 }}
                 mouseLeave={() =>{

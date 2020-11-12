@@ -30,35 +30,17 @@ export const Grid = (props: Props) => {
   const [grid, setGrid] = useState(() => {
     return generateEmptyGrid();
   });
-  const [startCoord, setStartCoord] = useState({r: 5, c: 5});
-  const [endCoord, setEndCoord] = useState({r: grid.length - 5, c: grid[0].length -5});
-  const [algoResult, setAlgoResult] = useState<Array<Coordinate>>([]);
+  const [startCoord, setStartCoord] = useState({ r: 5, c: 5 });
+  const [endCoord, setEndCoord] = useState({
+    r: grid.length - 5, 
+    c: grid[0].length -  5,
+  });
   const [isDraggingStart, setIsDraggingStart] = useState(false);
   const [isDraggingEnd, setIsDraggingEnd] = useState(false);
   const [isDraggingWall, setIsDraggingWall] = useState(false);
-  const [animationIndex, setAnimationIndex] = useState(0);
   const [running, setRunning] = useState(false);
   const runningRef = useRef(running);
   runningRef.current = running;
-
-  const runAnimation = useCallback(async () => {
-    
-    if (!runningRef.current) {
-      setAnimationIndex(0);
-      return;
-    }
-    for(var i = 0; i < algoResult.length; i++){
-      console.log('coloring cell', algoResult[i].r, algoResult[i].c)
-      setGrid((g) => {
-        return produce(g, (copy) => {
-          copy[algoResult[i].r][algoResult[i].c].type =
-       
-                CellType.VISITED;
-        });
-      });
-      await new Promise(r => setTimeout(r, 500));
-    }    
-  }, []);
 
   return (
     <>
@@ -67,23 +49,20 @@ export const Grid = (props: Props) => {
         onClick={async () => {
           setRunning(true);
           let res = dijkstra(grid, startCoord, endCoord);
-          for(var i = 0; i < res.length; i++){
-            console.log('coloring cell', res[i].r, res[i].c)
+          for (var i = 0; i < res.length; i++) {
+            console.log("coloring cell", res[i].r, res[i].c);
             setGrid((g) => {
               return produce(g, (copy) => {
-                copy[res[i].r][res[i].c].type =
-             
-                      CellType.VISITED;
+                copy[res[i].r][res[i].c].type = CellType.VISITED;
               });
             });
-            await new Promise(r => setTimeout(r, 20));
-          }    
+            await new Promise((r) => setTimeout(r, 1));
+          }
         }}
       >
         start
       </button>
-      <button
-      onClick={() => setRunning(false)}>stop</button>
+      <button onClick={() => setRunning(false)}>stop</button>
       <div
         style={{
           display: "grid",
@@ -99,7 +78,7 @@ export const Grid = (props: Props) => {
                 key={`${i}-${j}`}
                 row={i}
                 col={j}
-               type={col.type}
+                type={col.type}
                 mouseDown={() => {
                   if (col.type === CellType.START) {
                     setIsDraggingStart(true);
@@ -117,7 +96,6 @@ export const Grid = (props: Props) => {
                     });
                     setIsDraggingWall(true);
                   }
-                  
                 }}
                 mouseEnter={() => {
                   if (isDraggingStart) {
@@ -144,24 +122,23 @@ export const Grid = (props: Props) => {
                     });
                   }
                 }}
-                mouseLeave={() =>{
-                  if(isDraggingStart || isDraggingEnd){
-                    setGrid(g => {
-                      return produce(g, copy =>{
+                mouseLeave={() => {
+                  if (isDraggingStart || isDraggingEnd) {
+                    setGrid((g) => {
+                      return produce(g, (copy) => {
                         copy[i][j].type = CellType.EMPTY;
                       });
                     });
                   }
                 }}
                 mouseUp={() => {
-                  if(isDraggingStart){
-                    setStartCoord({r: i, c: j});
+                  if (isDraggingStart) {
+                    setStartCoord({ r: i, c: j });
                     setIsDraggingStart(false);
-                  }else if(isDraggingEnd){
-                    setEndCoord({r: i, c: j});
+                  } else if (isDraggingEnd) {
+                    setEndCoord({ r: i, c: j });
                     setIsDraggingEnd(false);
-                  }else if(isDraggingWall){
-                    console.log('end wall');
+                  } else if (isDraggingWall) {
                     setIsDraggingWall(false);
                   }
                 }}

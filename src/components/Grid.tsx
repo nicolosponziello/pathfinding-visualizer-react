@@ -92,6 +92,25 @@ export const Grid = (props: Props) => {
       >
         start
       </button>
+      <button
+        onClick={() => {
+          setGrid((g) => {
+            return produce(g, (copy) => {
+              for (var i = 0; i < copy.length; i++) {
+                for (var j = 0; j < copy[0].length; j++) {
+                  if (
+                    copy[i][j].type === CellType.SHORTEST_PATH ||
+                    copy[i][j].type === CellType.VISITED
+                  )
+                    copy[i][j].type = CellType.EMPTY;
+                }
+              }
+            });
+          });
+        }}
+      >
+        reset
+      </button>
       <div className="container">
         <div
           style={{
@@ -110,7 +129,7 @@ export const Grid = (props: Props) => {
                   col={j}
                   type={col.type}
                   mouseDown={() => {
-                    if  (!isAnimating)  {
+                    if (!isAnimating) {
                       if (col.type === CellType.START) {
                         setIsDraggingStart(true);
                       } else if (col.type == CellType.END) {
@@ -130,7 +149,7 @@ export const Grid = (props: Props) => {
                     }
                   }}
                   mouseEnter={() => {
-                    if  (!isAnimating)  {
+                    if (!isAnimating) {
                       if (isDraggingStart) {
                         setGrid((g) => {
                           return produce(g, (copy) => {
@@ -157,7 +176,7 @@ export const Grid = (props: Props) => {
                     }
                   }}
                   mouseLeave={() => {
-                    if  (!isAnimating)  {
+                    if (!isAnimating) {
                       if (isDraggingStart || isDraggingEnd) {
                         setGrid((g) => {
                           return produce(g, (copy) => {
@@ -168,7 +187,7 @@ export const Grid = (props: Props) => {
                     }
                   }}
                   mouseUp={() => {
-                    if  (!isAnimating)  {
+                    if (!isAnimating) {
                       if (isDraggingStart) {
                         setStartCoord({ r: i, c: j });
                         setIsDraggingStart(false);

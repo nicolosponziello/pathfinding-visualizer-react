@@ -12,7 +12,7 @@
 .visited {
     background-color: aquamarine;
     animation-name: visiting;
-    animation-duration: 0.75s;
+    animation-duration: 0.5s;
 }
 
 @keyframes visiting {

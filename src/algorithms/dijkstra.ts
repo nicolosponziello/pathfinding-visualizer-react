@@ -114,7 +114,6 @@ export default function dijkstra(
   console.log(currentNode.r, currentNode.c, end.r, end.c, start.r, start.c);
   while(currentNode.c != start.c || currentNode.r != start.r){
     shortestPath.push(currentNode);
-    console.log('adding', currentNode, 'to shortest path');
     currentNode = parents[currentNode.r][currentNode.c];
   }
   shortestPath = shortestPath.reverse();

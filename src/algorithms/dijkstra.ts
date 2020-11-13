@@ -121,7 +121,6 @@ export default function dijkstra(
   //calculate shortest path from end to start
   currentNode.c = end.c;
   currentNode.r = end.r;
-  console.log(currentNode.r, currentNode.c, end.r, end.c, start.r, start.c);
   while(currentNode.c != start.c || currentNode.r != start.r){
     shortestPath.push(currentNode);
     currentNode = parents[currentNode.r][currentNode.c];

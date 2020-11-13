@@ -1,37 +1,35 @@
 import React, { useCallback, useRef, useState } from "react";
-import { H_CELLS_NUM, SQUARE_WIDTH, V_CELLS_NUM } from "../constants";
-import Node from "./Node/node.component";
-import {produce} from 'immer';
+import { H_CELLS_NUM, SQUARE_WIDTH, V_CELLS_NUM } from "../../constants";
+import Node from "../Node/node.component";
+import { produce } from "immer";
 import {
   GridNode,
   CellType,
   Coordinate,
   AlgorithmResult,
-} from "./Node/node_data";
-import dijkstra from "../algorithms/dijkstra";
+} from "../Node/node_data";
+import dijkstra from "../../algorithms/dijkstra";
 
 interface Props {}
 
 const generateEmptyGrid = () => {
   var grid = Array<Array<GridNode>>();
-  for(var i = 0; i < V_CELLS_NUM; i++){
+  for (var i = 0; i < V_CELLS_NUM; i++) {
     var el = Array<GridNode>();
-    for(var j = 0; j < H_CELLS_NUM; j++){
+    for (var j = 0; j < H_CELLS_NUM; j++) {
       el.push({
         row: i,
         col: j,
-        type: CellType.EMPTY
+        type: CellType.EMPTY,
       });
     }
     grid.push(el);
   }
   //set start and end
   grid[5][5].type = CellType.START;
-  grid[grid.length - 5][grid[0].length-5].type = CellType.END;
+  grid[grid.length - 5][grid[0].length - 5].type = CellType.END;
   return grid;
-}
-
-
+};
 
 export const Grid = (props: Props) => {
   const [grid, setGrid] = useState(() => {
@@ -39,8 +37,8 @@ export const Grid = (props: Props) => {
   });
   const [startCoord, setStartCoord] = useState({ r: 5, c: 5 });
   const [endCoord, setEndCoord] = useState({
-    r: grid.length - 5, 
-    c: grid[0].length -  5,
+    r: grid.length - 5,
+    c: grid[0].length - 5,
   });
   const [isDraggingStart, setIsDraggingStart] = useState(false);
   const [isDraggingEnd, setIsDraggingEnd] = useState(false);
@@ -54,12 +52,12 @@ export const Grid = (props: Props) => {
           for (var j = 0; j < copy[0].length; j++) {
             if (
               copy[i][j].type === CellType.SHORTEST_PATH ||
-              copy[i][j].type === CellType.VISITED || 
+              copy[i][j].type === CellType.VISITED ||
               copy[i][j].type === CellType.WALL
             )
-            copy[i][j].type = CellType.EMPTY;
+              copy[i][j].type = CellType.EMPTY;
           }
-       }
+        }
       });
     });
   };
@@ -73,9 +71,12 @@ export const Grid = (props: Props) => {
     if (!toAnimate) return;
     setGrid((g) => {
       return produce(g, (copy) => {
-        if(copy[toAnimate.r][toAnimate.c].type != CellType.END && copy[toAnimate.r][toAnimate.c].type != CellType.START){
+        if (
+          copy[toAnimate.r][toAnimate.c].type != CellType.END &&
+          copy[toAnimate.r][toAnimate.c].type != CellType.START
+        ) {
           copy[toAnimate.r][toAnimate.c].type = CellType.SHORTEST_PATH;
-        }          
+        }
       });
     });
     setTimeout(() => animatePath(path), 0);
@@ -93,8 +94,11 @@ export const Grid = (props: Props) => {
     }
     setGrid((g) => {
       return produce(g, (copy) => {
-        if(copy[toAnimate.r][toAnimate.c].type != CellType.END && copy[toAnimate.r][toAnimate.c].type != CellType.START){
-         copy[toAnimate.r][toAnimate.c].type = CellType.VISITED;
+        if (
+          copy[toAnimate.r][toAnimate.c].type != CellType.END &&
+          copy[toAnimate.r][toAnimate.c].type != CellType.START
+        ) {
+          copy[toAnimate.r][toAnimate.c].type = CellType.VISITED;
         }
       });
     });
@@ -133,9 +137,7 @@ export const Grid = (props: Props) => {
       >
         Reset Animation
       </button>
-      <button
-        onClick={resetWalls}
-      >reset all</button>
+      <button onClick={resetWalls}>reset all</button>
       <div className="container">
         <div
           style={{

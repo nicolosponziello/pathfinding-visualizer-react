@@ -39,12 +39,10 @@ const Node = (props: Props) => {
       onMouseEnter={() => props.mouseEnter()}
       onMouseLeave={() => props.mouseLeave()}
       onMouseUp={() => props.mouseUp()}
-      className={`${cssClass}`}
+      className={`node ${cssClass}`}
       style={{
         width: SQUARE_WIDTH,
         height: SQUARE_HEIGHT,
-        border: "1px solid black",
-        borderRadius: "7px",
       }}
     />
   );

@@ -36,3 +36,25 @@
         opacity: 1;
     }
 }
+
+.shortestPath {
+    background-color: yellow;
+    animation-name: shortestPathAnim;
+    animation-duration: 1s;
+}
+
+@keyframes shortestPathAnim {
+    0%{
+        transform: scale(0.5);
+    }
+    50%{
+        trasform: scale(1.25);
+        background-color: yellowgreen;
+        opacity: 0.5;
+    }
+    100%{
+        transform: scale(1);
+        background-color: yellow;
+        opacity: 1;
+    }
+}

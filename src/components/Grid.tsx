@@ -2,7 +2,12 @@ import React, { useCallback, useRef, useState } from "react";
 import { H_CELLS_NUM, SQUARE_WIDTH, V_CELLS_NUM } from "../constants";
 import Node from "./Node/node.component";
 import {produce} from 'immer';
-import { GridNode, CellType, Coordinate } from "./Node/node_data";
+import {
+  GridNode,
+  CellType,
+  Coordinate,
+  AlgorithmResult,
+} from "./Node/node_data";
 import dijkstra from "../algorithms/dijkstra";
 
 interface Props {}
@@ -41,12 +46,28 @@ export const Grid = (props: Props) => {
   const [isAnimating, setIsAnimating] = useState(false);
 
 
-  const animateResult = (visited: Array<Coordinate>) => {
-    if (!visited.length) {
+  const animatePath = (path: Array<Coordinate>) => {
+    if (!path.length) {
       return;
     }
 
-    let toAnimate = visited.shift()!;
+    let toAnimate = path.shift()!;
+    if (!toAnimate) return;
+    setGrid((g) => {
+      return produce(g, (copy) => {
+        copy[toAnimate.r][toAnimate.c].type = CellType.SHORTEST_PATH;
+      });
+    });
+    setTimeout(() => animatePath(path), 0);
+  };
+
+  const animateResult = (res: AlgorithmResult) => {
+    if (!res.orderOfVisit.length) {
+      animatePath(res.shortestPath);
+      return;
+    }
+
+    let toAnimate = res.orderOfVisit.shift()!;
     if (!toAnimate) {
       return;
     }
@@ -55,7 +76,7 @@ export const Grid = (props: Props) => {
         copy[toAnimate.r][toAnimate.c].type = CellType.VISITED;
       });
     });
-    setTimeout(() => animateResult(visited), 0);
+    setTimeout(() => animateResult(res), 0);
   };
 
   return (

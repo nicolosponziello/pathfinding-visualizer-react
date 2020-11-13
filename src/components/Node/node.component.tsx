@@ -29,8 +29,10 @@ const Node = (props: Props) => {
     case CellType.VISITED:
       cssClass = "visited";
       break;
+    case CellType.SHORTEST_PATH:
+      cssClass = "shortestPath";
+      break;
   }
-  if (cssClass == "wall") console.log(cssClass);
   return (
     <div
       onMouseDown={() => props.mouseDown()}

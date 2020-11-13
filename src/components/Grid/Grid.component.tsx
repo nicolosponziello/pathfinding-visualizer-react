@@ -9,6 +9,7 @@ import {
   AlgorithmResult,
 } from "../Node/node_data";
 import dijkstra from "../../algorithms/dijkstra";
+import  {iterativeDFS} from "../../algorithms/dfs";
 
 interface Props {}
 
@@ -44,6 +45,7 @@ export const Grid = (props: Props) => {
   const [isDraggingEnd, setIsDraggingEnd] = useState(false);
   const [isDraggingWall, setIsDraggingWall] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [algo, setAlgo] = useState("");
 
   const resetWalls = () => {
     setGrid((g) => {
@@ -111,7 +113,15 @@ export const Grid = (props: Props) => {
       <button
         onClick={async () => {
           setIsAnimating(true);
-          var res = dijkstra(grid, startCoord, endCoord);
+          var res: AlgorithmResult = {  orderOfVisit: [], shortestPath: []  };
+          switch (algo) {
+            case "dfs":
+              res = iterativeDFS(grid, startCoord, endCoord);
+              break;
+            case "dijkstra":
+              res = dijkstra(grid, startCoord, endCoord);
+              break;
+          }
           animateResult(res);
           setIsAnimating(false);
         }}
@@ -138,6 +148,10 @@ export const Grid = (props: Props) => {
         Reset Animation
       </button>
       <button onClick={resetWalls}>reset all</button>
+      <select onChange={(ev) => setAlgo(ev.target.value)}>
+        <option value="dfs">DFS</option>
+        <option value="dijkstra">Dijkstra</option>
+      </select>
       <div className="container">
         <div
           style={{

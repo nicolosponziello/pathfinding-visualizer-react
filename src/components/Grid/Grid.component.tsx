@@ -1,4 +1,4 @@
-import React, { useCallback, useRef, useState } from "react";
+import React, { useState } from "react";
 import { H_CELLS_NUM, SQUARE_WIDTH, V_CELLS_NUM } from "../../constants";
 import Node from "../Node/node.component";
 import { produce } from "immer";

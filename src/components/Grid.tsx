@@ -38,31 +38,39 @@ export const Grid = (props: Props) => {
   const [isDraggingStart, setIsDraggingStart] = useState(false);
   const [isDraggingEnd, setIsDraggingEnd] = useState(false);
   const [isDraggingWall, setIsDraggingWall] = useState(false);
-  const [running, setRunning] = useState(false);
-  const runningRef = useRef(running);
-  runningRef.current = running;
+  const [isAnimating, setIsAnimating] = useState(false);
+
+
+  const animateResult = (visited: Array<Coordinate>) => {
+    if (!visited.length) {
+      return;
+    }
+
+    let toAnimate = visited.shift()!;
+    if (!toAnimate) {
+      return;
+    }
+    setGrid((g) => {
+      return produce(g, (copy) => {
+        copy[toAnimate.r][toAnimate.c].type = CellType.VISITED;
+      });
+    });
+    setTimeout(() => animateResult(visited), 0);
+  };
 
   return (
     <>
       <p>Grid</p>
       <button
         onClick={async () => {
-          setRunning(true);
-          let res = dijkstra(grid, startCoord, endCoord);
-          for (var i = 0; i < res.length; i++) {
-            console.log("coloring cell", res[i].r, res[i].c);
-            setGrid((g) => {
-              return produce(g, (copy) => {
-                copy[res[i].r][res[i].c].type = CellType.VISITED;
-              });
-            });
-            await new Promise((r) => setTimeout(r, 1));
-          }
+          setIsAnimating(true);
+          var res = dijkstra(grid, startCoord, endCoord);
+          animateResult(res);
+          setIsAnimating(false);
         }}
       >
         start
       </button>
-      <button onClick={() => setRunning(false)}>stop</button>
       <div className="container">
         <div
           style={{
@@ -81,66 +89,74 @@ export const Grid = (props: Props) => {
                   col={j}
                   type={col.type}
                   mouseDown={() => {
-                    if (col.type === CellType.START) {
-                      setIsDraggingStart(true);
-                    } else if (col.type == CellType.END) {
-                      setIsDraggingEnd(true);
-                    } else {
-                      setGrid((g) => {
-                        return produce(g, (copy) => {
-                          if (copy[i][j].type === CellType.EMPTY) {
-                            copy[i][j].type = CellType.WALL;
-                          } else if (copy[i][j].type === CellType.WALL) {
-                            copy[i][j].type = CellType.EMPTY;
-                          }
+                    if  (!isAnimating)  {
+                      if (col.type === CellType.START) {
+                        setIsDraggingStart(true);
+                      } else if (col.type == CellType.END) {
+                        setIsDraggingEnd(true);
+                      } else {
+                        setGrid((g) => {
+                          return produce(g, (copy) => {
+                            if (copy[i][j].type === CellType.EMPTY) {
+                              copy[i][j].type = CellType.WALL;
+                            } else if (copy[i][j].type === CellType.WALL) {
+                              copy[i][j].type = CellType.EMPTY;
+                            }
+                          });
                         });
-                      });
-                      setIsDraggingWall(true);
+                        setIsDraggingWall(true);
+                      }
                     }
                   }}
                   mouseEnter={() => {
-                    if (isDraggingStart) {
-                      setGrid((g) => {
-                        return produce(g, (copy) => {
-                          copy[i][j].type = CellType.START;
+                    if  (!isAnimating)  {
+                      if (isDraggingStart) {
+                        setGrid((g) => {
+                          return produce(g, (copy) => {
+                            copy[i][j].type = CellType.START;
+                          });
                         });
-                      });
-                    } else if (isDraggingEnd) {
-                      setGrid((g) => {
-                        return produce(g, (copy) => {
-                          copy[i][j].type = CellType.END;
+                      } else if (isDraggingEnd) {
+                        setGrid((g) => {
+                          return produce(g, (copy) => {
+                            copy[i][j].type = CellType.END;
+                          });
                         });
-                      });
-                    } else if (isDraggingWall) {
-                      setGrid((g) => {
-                        return produce(g, (copy) => {
-                          if (copy[i][j].type === CellType.EMPTY) {
-                            copy[i][j].type = CellType.WALL;
-                          } else if (copy[i][j].type === CellType.WALL) {
-                            copy[i][j].type = CellType.EMPTY;
-                          }
+                      } else if (isDraggingWall) {
+                        setGrid((g) => {
+                          return produce(g, (copy) => {
+                            if (copy[i][j].type === CellType.EMPTY) {
+                              copy[i][j].type = CellType.WALL;
+                            } else if (copy[i][j].type === CellType.WALL) {
+                              copy[i][j].type = CellType.EMPTY;
+                            }
+                          });
                         });
-                      });
+                      }
                     }
                   }}
                   mouseLeave={() => {
-                    if (isDraggingStart || isDraggingEnd) {
-                      setGrid((g) => {
-                        return produce(g, (copy) => {
-                          copy[i][j].type = CellType.EMPTY;
+                    if  (!isAnimating)  {
+                      if (isDraggingStart || isDraggingEnd) {
+                        setGrid((g) => {
+                          return produce(g, (copy) => {
+                            copy[i][j].type = CellType.EMPTY;
+                          });
                         });
-                      });
+                      }
                     }
                   }}
                   mouseUp={() => {
-                    if (isDraggingStart) {
-                      setStartCoord({ r: i, c: j });
-                      setIsDraggingStart(false);
-                    } else if (isDraggingEnd) {
-                      setEndCoord({ r: i, c: j });
-                      setIsDraggingEnd(false);
-                    } else if (isDraggingWall) {
-                      setIsDraggingWall(false);
+                    if  (!isAnimating)  {
+                      if (isDraggingStart) {
+                        setStartCoord({ r: i, c: j });
+                        setIsDraggingStart(false);
+                      } else if (isDraggingEnd) {
+                        setEndCoord({ r: i, c: j });
+                        setIsDraggingEnd(false);
+                      } else if (isDraggingWall) {
+                        setIsDraggingWall(false);
+                      }
                     }
                   }}
                 />

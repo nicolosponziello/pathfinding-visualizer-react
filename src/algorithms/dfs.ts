@@ -29,15 +29,15 @@ export function iterativeDFS(
   while (stack.length) {
     currentNode = stack.pop()!;
     //if the node is not visited
+    orderOfVisit.push(currentNode);
     if (!visited.some((n) => n.r === currentNode.r && n.c === currentNode.c)) {
       visited.push(currentNode);
-      orderOfVisit.push(currentNode);
     }
     let adjs = getAdjNodes(grid, currentNode);
     for (let i = 0; i < adjs.length; i++) {
       if (!visited.some((n) => n.r === adjs[i].r && n.c === adjs[i].c)) {
-        stack.push(adjs[i]);
         parents[adjs[i].r][adjs[i].c] = currentNode;
+        stack.push(adjs[i]);
       }
     }
     if (currentNode.r === end.r && currentNode.c === end.c) {

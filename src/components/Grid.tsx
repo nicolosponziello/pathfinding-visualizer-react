@@ -31,6 +31,8 @@ const generateEmptyGrid = () => {
   return grid;
 }
 
+
+
 export const Grid = (props: Props) => {
   const [grid, setGrid] = useState(() => {
     return generateEmptyGrid();
@@ -45,6 +47,22 @@ export const Grid = (props: Props) => {
   const [isDraggingWall, setIsDraggingWall] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
 
+  const resetWalls = () => {
+    setGrid((g) => {
+      return produce(g, (copy) => {
+        for (var i = 0; i < copy.length; i++) {
+          for (var j = 0; j < copy[0].length; j++) {
+            if (
+              copy[i][j].type === CellType.SHORTEST_PATH ||
+              copy[i][j].type === CellType.VISITED || 
+              copy[i][j].type === CellType.WALL
+            )
+            copy[i][j].type = CellType.EMPTY;
+          }
+       }
+      });
+    });
+  };
 
   const animatePath = (path: Array<Coordinate>) => {
     if (!path.length) {
@@ -55,7 +73,9 @@ export const Grid = (props: Props) => {
     if (!toAnimate) return;
     setGrid((g) => {
       return produce(g, (copy) => {
-        copy[toAnimate.r][toAnimate.c].type = CellType.SHORTEST_PATH;
+        if(copy[toAnimate.r][toAnimate.c].type != CellType.END && copy[toAnimate.r][toAnimate.c].type != CellType.START){
+          copy[toAnimate.r][toAnimate.c].type = CellType.SHORTEST_PATH;
+        }          
       });
     });
     setTimeout(() => animatePath(path), 0);
@@ -73,7 +93,9 @@ export const Grid = (props: Props) => {
     }
     setGrid((g) => {
       return produce(g, (copy) => {
-        copy[toAnimate.r][toAnimate.c].type = CellType.VISITED;
+        if(copy[toAnimate.r][toAnimate.c].type != CellType.END && copy[toAnimate.r][toAnimate.c].type != CellType.START){
+         copy[toAnimate.r][toAnimate.c].type = CellType.VISITED;
+        }
       });
     });
     setTimeout(() => animateResult(res), 0);
@@ -109,8 +131,11 @@ export const Grid = (props: Props) => {
           });
         }}
       >
-        reset
+        Reset Animation
       </button>
+      <button
+        onClick={resetWalls}
+      >reset all</button>
       <div className="container">
         <div
           style={{

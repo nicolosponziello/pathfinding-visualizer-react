@@ -46,7 +46,10 @@ export default function dijkstra(
         dist[currentNode.r][currentNode.c] + 1;
       orderOfExamination.push({ r: currentNode.r - 1, c: currentNode.c });
       discoveredNodes.push({ r: currentNode.r - 1, c: currentNode.c });
-      parents[currentNode.r -1][currentNode.c] = {r: currentNode.r, c: currentNode.c};
+      parents[currentNode.r - 1][currentNode.c] = {
+        r: currentNode.r,
+        c: currentNode.c,
+      };
       if (currentNode.r - 1 === end.r && currentNode.c === end.c) {
         found = true;
       }
@@ -62,7 +65,10 @@ export default function dijkstra(
         dist[currentNode.r][currentNode.c] + 1;
       orderOfExamination.push({ r: currentNode.r, c: currentNode.c + 1 });
       discoveredNodes.push({ r: currentNode.r, c: currentNode.c + 1 });
-      parents[currentNode.r][currentNode.c + 1] = {r: currentNode.r, c: currentNode.c};
+      parents[currentNode.r][currentNode.c + 1] = {
+        r: currentNode.r,
+        c: currentNode.c,
+      };
 
       if (currentNode.r === end.r && currentNode.c + 1 === end.c) {
         found = true;
@@ -79,7 +85,10 @@ export default function dijkstra(
         dist[currentNode.r][currentNode.c] + 1;
       orderOfExamination.push({ r: currentNode.r + 1, c: currentNode.c });
       discoveredNodes.push({ r: currentNode.r + 1, c: currentNode.c });
-      parents[currentNode.r + 1][currentNode.c] = {r: currentNode.r, c: currentNode.c};
+      parents[currentNode.r + 1][currentNode.c] = {
+        r: currentNode.r,
+        c: currentNode.c,
+      };
 
       if (currentNode.r + 1 === end.r && currentNode.c === end.c) {
         found = true;
@@ -96,7 +105,10 @@ export default function dijkstra(
         dist[currentNode.r][currentNode.c] + 1;
       orderOfExamination.push({ r: currentNode.r, c: currentNode.c - 1 });
       discoveredNodes.push({ r: currentNode.r, c: currentNode.c - 1 });
-      parents[currentNode.r][currentNode.c - 1] = {r: currentNode.r, c: currentNode.c};
+      parents[currentNode.r][currentNode.c - 1] = {
+        r: currentNode.r,
+        c: currentNode.c,
+      };
 
       if (currentNode.r === end.r && currentNode.c - 1 === end.c) {
         found = true;
@@ -105,7 +117,6 @@ export default function dijkstra(
 
     currentNode = discoveredNodes.shift()!;
   }
-  orderOfExamination.pop();
 
 
   //calculate shortest path from end to start
@@ -117,7 +128,6 @@ export default function dijkstra(
     currentNode = parents[currentNode.r][currentNode.c];
   }
   shortestPath = shortestPath.reverse();
-  shortestPath.pop();
   return {
     orderOfVisit: orderOfExamination,
     shortestPath: shortestPath

@@ -34,7 +34,6 @@ export default function dijkstra(
       found = true;
     }
     //check all sourroundings and set distance 1
-    console.log("current: ", currentNode);
     //check top
     if (
       currentNode.r - 1 >= 0 &&

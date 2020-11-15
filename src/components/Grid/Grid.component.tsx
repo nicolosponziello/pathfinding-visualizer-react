@@ -10,6 +10,7 @@ import {
 } from "../Node/node_data";
 import dijkstra from "../../algorithms/dijkstra";
 import  {iterativeDFS} from "../../algorithms/dfs";
+import { randomInteger } from "../../utils";
 
 interface Props {}
 
@@ -29,6 +30,21 @@ const generateEmptyGrid = () => {
   //set start and end
   grid[5][5].type = CellType.START;
   grid[grid.length - 5][grid[0].length - 5].type = CellType.END;
+  return grid;
+};
+
+const addRandomWalls = (
+  grid: Array<Array<GridNode>>,
+  amount: number
+): Array<Array<GridNode>> => {
+  let randX, randY;
+  for (let i = 0; i < amount; i++) {
+    do {
+      randX = randomInteger(0, grid.length - 1);
+      randY = randomInteger(0, grid[0].length - 1);
+    } while (grid[randX][randY].type != CellType.EMPTY);
+    grid[randX][randY].type = CellType.WALL;
+  }
   return grid;
 };
 
@@ -128,6 +144,15 @@ export const Grid = (props: Props) => {
       >
         start
       </button>
+      <button
+        onClick={() => {
+          setGrid(g => {
+            return produce(g, copy =>{
+              copy = addRandomWalls(copy, 10);
+            })
+          })
+        }}
+      >Generate 10 random walls</button>
       <button
         onClick={() => {
           setGrid((g) => {

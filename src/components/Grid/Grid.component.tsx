@@ -61,7 +61,7 @@ export const Grid = (props: Props) => {
   const [isDraggingEnd, setIsDraggingEnd] = useState(false);
   const [isDraggingWall, setIsDraggingWall] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
-  const [algo, setAlgo] = useState("");
+  const [algo, setAlgo] = useState("dfs");
 
   const resetWalls = () => {
     setGrid((g) => {
@@ -138,6 +138,7 @@ export const Grid = (props: Props) => {
               res = dijkstra(grid, startCoord, endCoord);
               break;
           }
+          console.log(algo, res);
           animateResult(res);
           setIsAnimating(false);
         }}

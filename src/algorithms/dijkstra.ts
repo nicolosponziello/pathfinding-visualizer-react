@@ -1,15 +1,17 @@
 import { AlgorithmResult, CellType, Coordinate, GridNode } from "../components/Node/node_data";
+import { gridDirections } from "../utils";
 
 export default function dijkstra(
   grid: Array<Array<GridNode>>,
   start: Coordinate,
   end: Coordinate
 ): AlgorithmResult {
-  var shortestPath = [];
+  var nodesToVisit = Array<Coordinate>();
+  var shortestPath = Array<Coordinate>();
   var orderOfExamination = Array<Coordinate>();
   var discoveredNodes = Array<Coordinate>();
   var parents = Array<Array<Coordinate>>();
-  var dist = [];
+  var dist = Array<Array<number>>();
   var found = false;
 
   //initialize dist matrix
@@ -17,117 +19,85 @@ export default function dijkstra(
     var tmp = Array<number>();
     var tmp2 = Array<Coordinate>();
     for (var j = 0; j < grid[0].length; j++) {
-      if (grid[i][j].type === CellType.START) {
-        tmp.push(0);
-        tmp2.push({  r: 0, c: 0  });
-      } else {
-        tmp2.push({  r: -1, c: -1  });
-        tmp.push(Infinity);
-      }
+      tmp2.push({ r: -1, c: -1 });
+      tmp.push(Infinity);
     }
     parents.push(tmp2);
     dist.push(tmp);
   }
-  var currentNode: Coordinate = { r: start.r, c: start.c };
-  while (!found) {
-    if (currentNode.r === end.r && currentNode.c === end.c) {
-      found = true;
-    }
-    //check all sourroundings and set distance 1
-    //check top
-    if (
-      currentNode.r - 1 >= 0 &&
-      dist[currentNode.r - 1][currentNode.c] >
-        dist[currentNode.r][currentNode.c] + 1 &&
-      grid[currentNode.r - 1][currentNode.c].type != CellType.WALL
-    ) {
-      dist[currentNode.r - 1][currentNode.c] =
-        dist[currentNode.r][currentNode.c] + 1;
-      orderOfExamination.push({ r: currentNode.r - 1, c: currentNode.c });
-      discoveredNodes.push({ r: currentNode.r - 1, c: currentNode.c });
-      parents[currentNode.r - 1][currentNode.c] = {
-        r: currentNode.r,
-        c: currentNode.c,
-      };
-      if (currentNode.r - 1 === end.r && currentNode.c === end.c) {
-        found = true;
-      }
-    }
-    //check right
-    if (
-      currentNode.c + 1 < grid[0].length &&
-      dist[currentNode.r][currentNode.c + 1] >
-        dist[currentNode.r][currentNode.c] + 1 &&
-      grid[currentNode.r][currentNode.c + 1].type != CellType.WALL
-    ) {
-      dist[currentNode.r][currentNode.c + 1] =
-        dist[currentNode.r][currentNode.c] + 1;
-      orderOfExamination.push({ r: currentNode.r, c: currentNode.c + 1 });
-      discoveredNodes.push({ r: currentNode.r, c: currentNode.c + 1 });
-      parents[currentNode.r][currentNode.c + 1] = {
-        r: currentNode.r,
-        c: currentNode.c,
-      };
+  parents[start.r][start.c] = { r: 0, c: 0 };
+  dist[start.r][start.c] = 0;
 
-      if (currentNode.r === end.r && currentNode.c + 1 === end.c) {
-        found = true;
-      }
+  for (let i = 0; i < grid.length; i++) {
+    for (let j = 0; j < grid[0].length; j++) {
+      nodesToVisit.push({ r: grid[i][j].row, c: grid[i][j].col });
     }
-    //check bottom
-    if (
-      currentNode.r + 1 < grid.length &&
-      dist[currentNode.r + 1][currentNode.c] >
-        dist[currentNode.r][currentNode.c] + 1 &&
-      grid[currentNode.r + 1][currentNode.c].type != CellType.WALL
-    ) {
-      dist[currentNode.r + 1][currentNode.c] =
-        dist[currentNode.r][currentNode.c] + 1;
-      orderOfExamination.push({ r: currentNode.r + 1, c: currentNode.c });
-      discoveredNodes.push({ r: currentNode.r + 1, c: currentNode.c });
-      parents[currentNode.r + 1][currentNode.c] = {
-        r: currentNode.r,
-        c: currentNode.c,
-      };
-
-      if (currentNode.r + 1 === end.r && currentNode.c === end.c) {
-        found = true;
-      }
-    }
-    //check left
-    if (
-      currentNode.c - 1 >= 0 &&
-      dist[currentNode.r][currentNode.c - 1] >
-        dist[currentNode.r][currentNode.c] + 1 &&
-      grid[currentNode.r][currentNode.c - 1].type != CellType.WALL
-    ) {
-      dist[currentNode.r][currentNode.c - 1] =
-        dist[currentNode.r][currentNode.c] + 1;
-      orderOfExamination.push({ r: currentNode.r, c: currentNode.c - 1 });
-      discoveredNodes.push({ r: currentNode.r, c: currentNode.c - 1 });
-      parents[currentNode.r][currentNode.c - 1] = {
-        r: currentNode.r,
-        c: currentNode.c,
-      };
-
-      if (currentNode.r === end.r && currentNode.c - 1 === end.c) {
-        found = true;
-      }
-    }
-
-    currentNode = discoveredNodes.shift()!;
   }
 
+  var currentNode: Coordinate = { r: start.r, c: start.c };
+  while (!found && nodesToVisit.length) {
+    //sort remaining nodes by distance
+    nodesToVisit.sort((a, b) => dist[a.r][a.c] - dist[b.r][b.c]);
+    const closest = nodesToVisit.shift()!;
 
+    //hit a wall
+    if (grid[closest?.r][closest?.c].type === CellType.WALL) {
+      continue;
+    }
+
+    //trapped
+    if (dist[closest.r][closest.c] === Infinity) {
+      return {
+        orderOfVisit: orderOfExamination,
+        shortestPath: [],
+      };
+    }
+
+    //all good
+    //register visit
+    orderOfExamination.push(closest);
+    //did we find the end?
+    if (closest.r === end.r && closest.c === end.c) {
+      return {
+        orderOfVisit: orderOfExamination,
+        shortestPath: shortestPath,
+      }
+    }
+
+    //get available neighbours
+    let neighbours = [];
+    for (let i = 0; i < gridDirections.length; i++) {
+      let candidate = {       
+        r: closest.r + gridDirections[i].r,
+        c: closest.c + gridDirections[i].c,
+      };
+      if(        
+        candidate.r >= 0 &&
+        candidate.r < grid.length &&
+        candidate.c >= 0 &&
+        candidate.c < grid[0].length &&
+        !orderOfExamination.some(n => n.r === candidate.r && n.c === candidate.c)) {
+          neighbours.push(candidate);
+      }
+    }
+
+    //iterate the neighbours
+    for (const neighbor of neighbours) {
+      dist[neighbor.r][neighbor.c] = dist[closest.r][closest.c] + 1;
+      parents[neighbor.r][neighbor.c] = closest;
+    }
+
+  }
   //calculate shortest path from end to start
   currentNode.c = end.c;
   currentNode.r = end.r;
-  while(currentNode.c != start.c || currentNode.r != start.r){
+  while       (currentNode.c != start.c || currentNode.r != start.r)       {
     shortestPath.push(currentNode);
     currentNode = parents[currentNode.r][currentNode.c];
   }
   shortestPath = shortestPath.reverse();
   return {
     orderOfVisit: orderOfExamination,
-    shortestPath: shortestPath
+    shortestPath: shortestPath,
   };
 }

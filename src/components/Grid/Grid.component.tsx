@@ -29,12 +29,8 @@ const generateEmptyGrid = () => {
     grid.push(el);
   }
   //set start and end
-  grid[randomInteger(0, grid.length - 1)][
-    randomInteger(0, grid[0].length - 1)
-  ].type = CellType.START;
-  grid[randomInteger(0, grid.length - 1)][
-    randomInteger(0, grid[0].length - 1)
-  ].type = CellType.END;
+  grid[5][5].type = CellType.START;
+  grid[grid.length - 5][grid[0].length - 5].type = CellType.END;
   return grid;
 };
 

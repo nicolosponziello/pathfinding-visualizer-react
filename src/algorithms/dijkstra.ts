@@ -58,10 +58,7 @@ export default function dijkstra(
     orderOfExamination.push(closest);
     //did we find the end?
     if (closest.r === end.r && closest.c === end.c) {
-      return {
-        orderOfVisit: orderOfExamination,
-        shortestPath: shortestPath,
-      }
+      found = true;
     }
 
     //get available neighbours

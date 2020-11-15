@@ -11,6 +11,7 @@ import {
 import dijkstra from "../../algorithms/dijkstra";
 import  {iterativeDFS} from "../../algorithms/dfs";
 import { randomInteger } from "../../utils";
+import BFS from "../../algorithms/bfs";
 
 interface Props {}
 
@@ -129,13 +130,16 @@ export const Grid = (props: Props) => {
       <button
         onClick={async () => {
           setIsAnimating(true);
-          var res: AlgorithmResult = {  orderOfVisit: [], shortestPath: []  };
+          var res: AlgorithmResult = { orderOfVisit: [], shortestPath: [] };
           switch (algo) {
             case "dfs":
               res = iterativeDFS(grid, startCoord, endCoord);
               break;
             case "dijkstra":
               res = dijkstra(grid, startCoord, endCoord);
+              break;
+            case "bfs":
+              res = BFS(grid, startCoord, endCoord);
               break;
           }
           console.log(algo, res);
@@ -147,13 +151,15 @@ export const Grid = (props: Props) => {
       </button>
       <button
         onClick={() => {
-          setGrid(g => {
-            return produce(g, copy =>{
+          setGrid((g) => {
+            return produce(g, (copy) => {
               copy = addRandomWalls(copy, 10);
-            })
-          })
+            });
+          });
         }}
-      >Generate 10 random walls</button>
+      >
+        Generate 10 random walls
+      </button>
       <button
         onClick={() => {
           setGrid((g) => {
@@ -176,6 +182,7 @@ export const Grid = (props: Props) => {
       <button onClick={resetWalls}>reset all</button>
       <select onChange={(ev) => setAlgo(ev.target.value)}>
         <option value="dfs">DFS</option>
+        <option value="bfs">BFS</option>
         <option value="dijkstra">Dijkstra</option>
       </select>
       <div className="container">

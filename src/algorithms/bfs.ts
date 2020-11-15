@@ -14,25 +14,31 @@ export default function BFS(
   var orderOfVisit = Array<Coordinate>();
   var dist = Array<Array<number>>();
   var parents = Array<Array<Coordinate>>();
+  var visited = Array<Array<boolean>>();
   var current;
   var found = false;
 
   for (let i = 0; i < grid.length; i++) {
     let tmp = Array<Coordinate>();
     let tmpDist = Array<number>();
+    let tmpVis = Array<boolean>();
     for (let j = 0; j < grid[0].length; j++) {
       tmp.push({ r: -1, c: -1 });
       tmpDist.push(Infinity);
+      tmpVis.push(false);
     }
     parents.push(tmp);
     dist.push(tmpDist);
+    visited.push(tmpVis);
   }
 
   dist[start.r][start.c] = 0;
+  visited[start.r][start.c] = true;
   queue.push(start);
 
   while (!found && queue.length) {
     current = queue.shift()!;
+    visited[current.r][current.c] = true;
     if (current.r === end.r && current.c === end.c) {
       found = true;
     }
@@ -40,10 +46,15 @@ export default function BFS(
     let neighbours = getAdjNodes(grid, current);
     for (const neighbor of neighbours) {
       //if not visited yet
-      if (!orderOfVisit.some((n) => n.r === neighbor.r && n.c === neighbor.c)) {
+      if (!visited[neighbor.r][neighbor.c]) {
         dist[neighbor.r][neighbor.c] = dist[current.r][current.c] + 1;
         parents[neighbor.r][neighbor.c] = current;
+        visited[neighbor.r][neighbor.c] = true;
         queue.push(neighbor);
+
+        if (neighbor.r === end.r && neighbor.c === end.c) {
+          found = true;
+        }
       }
     }
   }

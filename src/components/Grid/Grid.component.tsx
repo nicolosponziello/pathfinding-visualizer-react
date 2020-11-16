@@ -121,31 +121,45 @@ export const Grid = (props: Props) => {
     }
   };
 
+  const start = () => {
+    resetAnimation();
+    setIsAnimating(true);
+    var res: AlgorithmResult = { orderOfVisit: [], shortestPath: [] };
+    switch (algo) {
+      case "dfs":
+        res = iterativeDFS(grid, startCoord, endCoord);
+        break;
+      case "dijkstra":
+        res = dijkstra(grid, startCoord, endCoord);
+        break;
+      case "bfs":
+        res = BFS(grid, startCoord, endCoord);
+        break;
+    }
+    animateResult(res);
+    setIsAnimating(false);
+  };
+
+  const resetAnimation = () => {
+    setGrid((g) => {
+      return produce(g, (copy) => {
+        for (var i = 0; i < copy.length; i++) {
+          for (var j = 0; j < copy[0].length; j++) {
+            if (
+              copy[i][j].type === CellType.SHORTEST_PATH ||
+              copy[i][j].type === CellType.VISITED
+            )
+              copy[i][j].type = CellType.EMPTY;
+          }
+        }
+      });
+    });
+  };
+
   return (
     <>
       <p>Grid</p>
-      <button
-        onClick={async () => {
-          setIsAnimating(true);
-          var res: AlgorithmResult = { orderOfVisit: [], shortestPath: [] };
-          switch (algo) {
-            case "dfs":
-              res = iterativeDFS(grid, startCoord, endCoord);
-              break;
-            case "dijkstra":
-              res = dijkstra(grid, startCoord, endCoord);
-              break;
-            case "bfs":
-              res = BFS(grid, startCoord, endCoord);
-              break;
-          }
-          console.log(algo, res);
-          animateResult(res);
-          setIsAnimating(false);
-        }}
-      >
-        start
-      </button>
+      <button onClick={start}>start</button>
       <button
         onClick={() => {
           setGrid((g) => {
@@ -158,22 +172,7 @@ export const Grid = (props: Props) => {
         Generate 10 random walls
       </button>
       <button
-        onClick={() => {
-          setGrid((g) => {
-            return produce(g, (copy) => {
-              for (var i = 0; i < copy.length; i++) {
-                for (var j = 0; j < copy[0].length; j++) {
-                  if (
-                    copy[i][j].type === CellType.SHORTEST_PATH ||
-                    copy[i][j].type === CellType.VISITED
-                  )
-                    copy[i][j].type = CellType.EMPTY;
-                }
-              }
-            });
-          });
-        }}
-      >
+        onClick={resetAnimation}>
         Reset Animation
       </button>
       <button onClick={resetWalls}>reset all</button>

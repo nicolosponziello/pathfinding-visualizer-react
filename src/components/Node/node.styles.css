@@ -5,6 +5,26 @@
 
 .wall {
     background-color: rgba(0, 0, 0, 0.664);
+    animation-name: wall-anim;
+    animation-duration: 0.35s;
+}
+
+@keyframes wall-anim {
+    0%{
+        transform: scale(0);
+    }
+    25%{
+        transform: scale(0.25);
+    }
+    50%{
+        transform: scale(0.50);
+    }
+    75%{
+        transform: scale(0.75);
+    }
+    100%{
+        transform: scale(1);
+    }
 }
 
 .start {

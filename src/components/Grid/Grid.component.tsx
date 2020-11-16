@@ -81,47 +81,44 @@ export const Grid = (props: Props) => {
     });
   };
 
-  const animatePath = (path: Array<Coordinate>) => {
-    if (!path.length) {
-      return;
-    }
-
-    let toAnimate = path.shift()!;
-    if (!toAnimate) return;
-    setGrid((g) => {
-      return produce(g, (copy) => {
-        if (
-          copy[toAnimate.r][toAnimate.c].type != CellType.END &&
-          copy[toAnimate.r][toAnimate.c].type != CellType.START
-        ) {
-          copy[toAnimate.r][toAnimate.c].type = CellType.SHORTEST_PATH;
-        }
-      });
-    });
-    setTimeout(() => animatePath(path), 0);
-  };
-
   const animateResult = (res: AlgorithmResult) => {
-    if (!res.orderOfVisit.length) {
-      animatePath(res.shortestPath);
-      return;
+    //animate visited
+    for(let i = 0; i < res.orderOfVisit.length; i++){
+      let toAnimate = res.orderOfVisit[i];
+      if (!toAnimate) {
+        return;
+      }
+      setTimeout( () => {
+        setGrid((g) => {
+          return produce(g, (copy) => {
+            if (
+              copy[toAnimate.r][toAnimate.c].type != CellType.END &&
+              copy[toAnimate.r][toAnimate.c].type != CellType.START
+            ) {
+              copy[toAnimate.r][toAnimate.c].type = CellType.VISITED;
+            }
+          });
+        });
+     }, 100);
     }
 
-    let toAnimate = res.orderOfVisit.shift()!;
-    if (!toAnimate) {
-      return;
+    //animate shortest path
+    for(let i = 0; i < res.shortestPath.length; i++){
+      let toAnimate = res.shortestPath[i];
+      if (!toAnimate) return;
+      setTimeout(() => {
+        setGrid((g) => {
+          return produce(g, (copy) => {
+            if (
+              copy[toAnimate.r][toAnimate.c].type != CellType.END &&
+              copy[toAnimate.r][toAnimate.c].type != CellType.START
+            ) {
+              copy[toAnimate.r][toAnimate.c].type = CellType.SHORTEST_PATH;
+            }
+          });
+        });
+      }, 100);
     }
-    setGrid((g) => {
-      return produce(g, (copy) => {
-        if (
-          copy[toAnimate.r][toAnimate.c].type != CellType.END &&
-          copy[toAnimate.r][toAnimate.c].type != CellType.START
-        ) {
-          copy[toAnimate.r][toAnimate.c].type = CellType.VISITED;
-        }
-      });
-    });
-    setTimeout(() => animateResult(res), 0);
   };
 
   return (

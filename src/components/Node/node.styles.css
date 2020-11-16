@@ -65,7 +65,7 @@
 .shortestPath {
     background-color: yellow;
     animation-name: shortestPathAnim;
-    animation-duration: 2s;
+    animation-duration: 0.75s;
 }
 
 @keyframes shortestPathAnim {

@@ -13,6 +13,9 @@ import  {iterativeDFS} from "../../algorithms/dfs";
 import { randomInteger } from "../../utils";
 import BFS from "../../algorithms/bfs";
 
+import "./grid.style.css";
+import Header from "../Header/header.component";
+
 interface Props {}
 
 const generateEmptyGrid = () => {
@@ -34,20 +37,6 @@ const generateEmptyGrid = () => {
   return grid;
 };
 
-const addRandomWalls = (
-  grid: Array<Array<GridNode>>,
-  amount: number
-): Array<Array<GridNode>> => {
-  let randX, randY;
-  for (let i = 0; i < amount; i++) {
-    do {
-      randX = randomInteger(0, grid.length - 1);
-      randY = randomInteger(0, grid[0].length - 1);
-    } while (grid[randX][randY].type != CellType.EMPTY);
-    grid[randX][randY].type = CellType.WALL;
-  }
-  return grid;
-};
 
 export const Grid = (props: Props) => {
   const [grid, setGrid] = useState(() => {
@@ -62,9 +51,8 @@ export const Grid = (props: Props) => {
   const [isDraggingEnd, setIsDraggingEnd] = useState(false);
   const [isDraggingWall, setIsDraggingWall] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
-  const [algo, setAlgo] = useState("dfs");
 
-  const resetWalls = () => {
+  const resetAll = () => {
     setGrid((g) => {
       return produce(g, (copy) => {
         for (var i = 0; i < copy.length; i++) {
@@ -121,7 +109,7 @@ export const Grid = (props: Props) => {
     }
   };
 
-  const start = () => {
+  const start = (algo: string) => {
     resetAnimation();
     setIsAnimating(true);
     var res: AlgorithmResult = { orderOfVisit: [], shortestPath: [] };
@@ -156,33 +144,34 @@ export const Grid = (props: Props) => {
     });
   };
 
+  const addRandomWalls = (amount: number): void => {
+    setGrid(g => {
+      return produce(g, copy => {
+        let randX, randY;
+        for (let i = 0; i < amount; i++) {
+          do {
+            randX = randomInteger(0, grid.length - 1);
+            randY = randomInteger(0, grid[0].length - 1);
+          } while (copy[randX][randY].type != CellType.EMPTY);
+          copy[randX][randY].type = CellType.WALL;
+        }
+      });
+    });
+  };
+  
+
   return (
     <>
-      <p>Grid</p>
-      <button onClick={start}>start</button>
-      <button
-        onClick={() => {
-          setGrid((g) => {
-            return produce(g, (copy) => {
-              copy = addRandomWalls(copy, 10);
-            });
-          });
-        }}
-      >
-        Generate 10 random walls
-      </button>
-      <button
-        onClick={resetAnimation}>
-        Reset Animation
-      </button>
-      <button onClick={resetWalls}>reset all</button>
-      <select onChange={(ev) => setAlgo(ev.target.value)}>
-        <option value="dfs">DFS</option>
-        <option value="bfs">BFS</option>
-        <option value="dijkstra">Dijkstra</option>
-      </select>
+      <Header 
+        onStart={start}
+        resetAnimation={resetAnimation}
+        resetAll={resetAll}
+        randomWalls={addRandomWalls}
+      />     
+      
       <div className="container">
         <div
+          className="grid"
           style={{
             display: "grid",
             gridTemplateColumns: `repeat(${H_CELLS_NUM.toFixed(
@@ -259,11 +248,10 @@ export const Grid = (props: Props) => {
                     }
                   }}
                   mouseUp={() => {
-                      setIsDraggingStart(false);
-                      setIsDraggingEnd(false);
-                      setIsDraggingWall(false);
-                    }
-                  }
+                    setIsDraggingStart(false);
+                    setIsDraggingEnd(false);
+                    setIsDraggingWall(false);
+                  }}
                 />
               );
             });

@@ -221,12 +221,14 @@ export const Grid = (props: Props) => {
                   mouseEnter={() => {
                     if (!isAnimating) {
                       if (isDraggingStart) {
+                        setStartCoord({ r: i, c: j });
                         setGrid((g) => {
                           return produce(g, (copy) => {
                             copy[i][j].type = CellType.START;
                           });
                         });
                       } else if (isDraggingEnd) {
+                        setEndCoord({ r: i, c: j });
                         setGrid((g) => {
                           return produce(g, (copy) => {
                             copy[i][j].type = CellType.END;
@@ -257,18 +259,11 @@ export const Grid = (props: Props) => {
                     }
                   }}
                   mouseUp={() => {
-                    if (!isAnimating) {
-                      if (isDraggingStart) {
-                        setStartCoord({ r: i, c: j });
-                        setIsDraggingStart(false);
-                      } else if (isDraggingEnd) {
-                        setEndCoord({ r: i, c: j });
-                        setIsDraggingEnd(false);
-                      } else if (isDraggingWall) {
-                        setIsDraggingWall(false);
-                      }
+                      setIsDraggingStart(false);
+                      setIsDraggingEnd(false);
+                      setIsDraggingWall(false);
                     }
-                  }}
+                  }
                 />
               );
             });

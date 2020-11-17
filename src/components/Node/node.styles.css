@@ -1,12 +1,17 @@
 .node {
-    border: 1px solid black;
+    border: 1px solid rgba(153, 145, 145, 0.884);
     border-radius: 7px;
+}
+
+.empty {
+    background-color: white;
 }
 
 .wall {
     background-color: rgba(0, 0, 0, 0.664);
     animation-name: wall-anim;
-    animation-duration: 0.35s;
+    animation-duration: 0.4s;
+    z-index: 1;
 }
 
 @keyframes wall-anim {

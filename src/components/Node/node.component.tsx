@@ -16,6 +16,7 @@ const Node = (props: Props) => {
   var cssClass = "";
   switch (props.type) {
     case CellType.EMPTY:
+      cssClass = "empty";
       break;
     case CellType.START:
       cssClass = "start";

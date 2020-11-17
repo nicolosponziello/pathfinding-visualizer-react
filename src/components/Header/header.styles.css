@@ -1,0 +1,38 @@
+.header-bar {
+    width: 100vw;
+    height: 10vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    background-color: #0D3B66;
+    color: white;
+    margin-bottom: 50px;
+}
+
+.app-name {
+    text-transform: uppercase;
+    font-size: large;
+    font-weight: bold;
+}
+
+.button {
+    background-color: yellow;
+    padding: 10px;
+    font-size: medium;
+    border-radius: 10px;
+}
+
+.start-btn {
+    background-color: greenyellow;
+}
+
+.selector-label {
+    font-size: medium;
+    font-weight: bolder;
+}
+
+.select {
+    padding: 5px;
+    border-radius: 10px;
+}

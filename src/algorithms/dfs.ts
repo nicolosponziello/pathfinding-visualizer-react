@@ -15,6 +15,7 @@ export function iterativeDFS(
   var visited = Array<Coordinate>();
   var orderOfVisit = Array<Coordinate>();
   var parents = Array<Array<Coordinate>>();
+  var found = false;
 
   //init parents matrix
   for (let i = 0; i < grid.length; i++) {
@@ -27,7 +28,7 @@ export function iterativeDFS(
 
   var currentNode = { r: start.r, c: start.c };
   stack.push(currentNode);
-  while (stack.length) {
+  while (!found && stack.length) {
     currentNode = stack.pop()!;
     //if the node is not visited
     orderOfVisit.push(currentNode);
@@ -42,8 +43,15 @@ export function iterativeDFS(
       }
     }
     if (currentNode.r === end.r && currentNode.c === end.c) {
-      break;
+      found = true;
     }
+  }
+
+  if (!found) {
+    return {
+      orderOfVisit: orderOfVisit,
+      shortestPath: [],
+    };
   }
 
   var shortestPath = Array<Coordinate>();

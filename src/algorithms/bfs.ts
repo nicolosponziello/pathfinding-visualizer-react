@@ -58,6 +58,12 @@ export default function BFS(
       }
     }
   }
+  if (!found) {
+    return {
+      orderOfVisit: orderOfVisit,
+      shortestPath: [],
+    };
+  }
 
   current = end;
   var shortestPath = Array<Coordinate>();

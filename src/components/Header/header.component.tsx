@@ -25,14 +25,22 @@ const Header = (props: Props) => {
         <button className="button" onClick={() => props.randomWalls(wallNum)}>
           Generate Walls
         </button>
-        <button 
+        <button
+          disabled={algoSelected === ""}
           className="button start-btn"
-          onClick={() => props.onStart(algoSelected)}>
+          onClick={() => props.onStart(algoSelected)}
+        >
           START
         </button>
         <div>
           <span className="selector-label">Algorithm: </span>
-          <select className="select" onChange={(ev) => setAlgo(ev.target.value)}>
+          <select
+            className="select"
+            onChange={(ev) => setAlgo(ev.target.value)}
+          >
+            <option hidden disabled selected>
+              ---
+            </option>
             <option value="dfs">DFS</option>
             <option value="bfs">BFS</option>
             <option value="dijkstra">Dijkstra</option>

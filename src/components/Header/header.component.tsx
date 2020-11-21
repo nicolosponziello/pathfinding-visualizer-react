@@ -10,6 +10,7 @@ interface Props {
 const Header = (props: Props) => {
   const [wallNum, setWallNum] = useState(10);
   const [algoSelected, setAlgo] = useState("");
+  const [euristic, setEuristic] = useState("manhattan");
   return (
     <>
       <div className="header-bar">
@@ -28,7 +29,7 @@ const Header = (props: Props) => {
         <button
           disabled={algoSelected === ""}
           className="button start-btn"
-          onClick={() => props.onStart(algoSelected)}
+          onClick={() => props.onStart(algoSelected, euristic)}
         >
           START
         </button>
@@ -45,6 +46,16 @@ const Header = (props: Props) => {
             <option value="bfs">BFS</option>
             <option value="dijkstra">Dijkstra</option>
             <option value="a*">A*</option>
+          </select>
+
+          <select
+            disabled={algoSelected != "a*"}
+            className="select"
+            onChange={(ev) => setEuristic(ev.target.value)}
+          >
+            <option value="manhattan">MANHATTAN</option>
+            <option value="euclidean">EUCLIDEAN</option>
+            <option value="diagonal">DIAGONAL</option>
           </select>
         </div>
         <button className="button" onClick={props.resetAnimation}>

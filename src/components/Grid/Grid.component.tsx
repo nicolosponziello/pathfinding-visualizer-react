@@ -20,6 +20,18 @@ import { Euristic } from "../../algorithms/astar-heuristics";
 
 interface Props {}
 
+const getEuristicType = (e: string | undefined): Euristic => {
+  switch (e) {
+    case "manhattan":
+      return Euristic.MANHATTAN;
+    case "diagonal":
+      return Euristic.DIAGONAL;
+    case "euclidean":
+      return Euristic.EUCLIDEAN;
+  }
+  return Euristic.MANHATTAN;
+};
+
 const generateEmptyGrid = () => {
   var grid = Array<Array<GridNode>>();
   for (var i = 0; i < V_CELLS_NUM; i++) {
@@ -111,7 +123,7 @@ export const Grid = (props: Props) => {
     }
   };
 
-  const start = (algo: string) => {
+  const start = (algo: string, euristic: string | undefined) => {
     resetAnimation();
     setIsAnimating(true);
     var res: AlgorithmResult = { orderOfVisit: [], shortestPath: [] };
@@ -126,7 +138,7 @@ export const Grid = (props: Props) => {
         res = BFS(grid, startCoord, endCoord);
         break;
       case "a*":
-        res = AStar(grid, startCoord, endCoord, Euristic.EUCLIDEAN);
+        res = AStar(grid, startCoord, endCoord, getEuristicType(euristic));
     }
     animateResult(res);
     setIsAnimating(false);

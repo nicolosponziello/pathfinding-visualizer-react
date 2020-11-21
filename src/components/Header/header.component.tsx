@@ -18,6 +18,7 @@ const Header = (props: Props) => {
         <label>
           <span className="selector-label">Walls: </span>
           <input
+            className="input"
             value={wallNum}
             type="number"
             onChange={(ev) => setWallNum(parseInt(ev.target.value))}

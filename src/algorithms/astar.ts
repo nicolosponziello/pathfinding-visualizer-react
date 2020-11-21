@@ -83,7 +83,6 @@ export default function AStar(
       shortestPath: [],
     };
   }
-  console.log('building shortest path');
   let current = end;
   var shortestPath = Array<Coordinate>();
   while (current.r != start.r || current.c != start.c) {
@@ -91,7 +90,6 @@ export default function AStar(
     current = nodes[current.r][current.c].parent!;
   }
   shortestPath.reverse();
-  console.log(shortestPath);
   return {
     orderOfVisit: orderOfVisit,
     shortestPath: shortestPath,

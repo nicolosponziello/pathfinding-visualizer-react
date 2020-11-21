@@ -1,5 +1,7 @@
 # Pathfinding visualizer 
 
+![image](imgs/pathfinding.png)
+
 Pathfinding visualizer made with React + TypeScript
 
 Implemented algorithms:

@@ -44,6 +44,7 @@ const Header = (props: Props) => {
             <option value="dfs">DFS</option>
             <option value="bfs">BFS</option>
             <option value="dijkstra">Dijkstra</option>
+            <option value="a*">A*</option>
           </select>
         </div>
         <button className="button" onClick={props.resetAnimation}>

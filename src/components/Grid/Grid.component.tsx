@@ -15,6 +15,8 @@ import BFS from "../../algorithms/bfs";
 
 import "./grid.style.css";
 import Header from "../Header/header.component";
+import AStar from "../../algorithms/astar";
+import { Euristic } from "../../algorithms/astar-heuristics";
 
 interface Props {}
 
@@ -123,6 +125,8 @@ export const Grid = (props: Props) => {
       case "bfs":
         res = BFS(grid, startCoord, endCoord);
         break;
+      case "a*":
+        res = AStar(grid, startCoord, endCoord, Euristic.EUCLIDEAN);
     }
     animateResult(res);
     setIsAnimating(false);

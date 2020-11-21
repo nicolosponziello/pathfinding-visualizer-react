@@ -15,3 +15,8 @@ export function getAdjNodes(
   return adj.filter((n) => grid[n.r][n.c].type != CellType.WALL);
   //.sort(() => Math.random() - 0.5);
 }
+
+
+export const compareNodes = (a: Coordinate, b: Coordinate): boolean => {
+  return a.r === b.r && a.c === b.c;
+};

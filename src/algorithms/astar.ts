@@ -4,7 +4,7 @@ import {
   GridNode,
 } from "../components/Node/node_data";
 import { calculateHeuristic, Euristic } from "./astar-heuristics";
-import { getAdjNodes } from "./common";
+import { compareNodes, getAdjNodes } from "./common";
 
 export default function AStar(
   grid: Array<Array<GridNode>>,
@@ -13,8 +13,8 @@ export default function AStar(
   euristic: Euristic
 ): AlgorithmResult {
   var orderOfVisit = Array<Coordinate>();
-  var openList = Array<AStarNode>();
-  var closedList = Array<AStarNode>();
+  var openList = Array<Coordinate>();
+  var closedList = Array<Coordinate>();
   var found = false;
   let nodes = Array<Array<AStarNode>>();
   let dist = Array<Array<number>>();
@@ -37,57 +37,44 @@ export default function AStar(
     nodes.push(tmp);
     dist.push(tmpDist);
   }
-  nodes[start.r][end.r].parent = { r: 0, c: 0 };
+  
   dist[start.r][start.c] = 0;
 
-  openList.push(nodes[start.r][start.c]);
+  nodes[start.r][start.c].g = 0;
+  nodes[start.r][start.c].h = calculateHeuristic(euristic, start, end);
+  nodes[start.r][start.c].f = nodes[start.r][start.c].g + nodes[start.r][start.c].h;
+
+  openList.push(start);
 
   while (!found && openList.length) {
-    //find the node with the lowest f in the open list
-    openList.sort((a, b) => a.f - b.f);
-    //pop the node off the list
-    let nodePicked = openList.shift()!;
+    //get the node with the lowest f score from the open list
+    openList.sort((a, b) => nodes[a.r][a.c].f - nodes[b.r][b.c].f);
+    let coord = openList.shift()!;
+    let current = nodes[coord.r][coord.c];
+    if(compareNodes(current, end)){
+      found = true;
+      break;
+    }
+    orderOfVisit.push({r: current.r, c: current.c});
+    closedList.push(current);
 
-    orderOfVisit.push({ r: nodePicked.r, c: nodePicked.c });
-
-    //get its neighbours
-    let adjs = getAdjNodes(grid, { r: nodePicked.r, c: nodePicked.c });
-    for (const adj of adjs) {
-      //iterate neighbours
-      if (adj.r === end.r && adj.c === end.c) {
-        found = true;
+    //analyze the neighbours
+    let adjs = getAdjNodes(grid, current);
+    for(const neigbor of adjs){
+      //check if is in the closed set
+      if(closedList.some(el => compareNodes(el, neigbor))){
+        continue;
       }
-      let successor = {
-        r: adj.r,
-        c: adj.c,
-        f: Infinity,
-        g: dist[nodePicked.r][nodePicked.c] + 1,
-        h: calculateHeuristic(euristic, { r: adj.r, c: adj.c }, end),
-        parent: nodePicked,
-      };
-
-      successor.f = successor.g + successor.h;
-      dist[successor.r][successor.c] = successor.g;
-
-      if (openList.some((a) => a.r === adj.r && a.c === adj.c)) {
-        //get the node
-        let node = openList.filter((el) => el.r === adj.r && el.c === adj.c)[0];
-        if (node.f < nodes[adj.r][adj.c].f) {
-          continue;
+      let tentative_g_score = current.g + 1; // the dist between one node to the neighbor is always 1 since it is a grid
+      if(!openList.some(el => compareNodes(el, neigbor)) || tentative_g_score < nodes[neigbor.r][neigbor.c].g){
+        nodes[neigbor.r][neigbor.c].parent = current;
+        nodes[neigbor.r][neigbor.c].g = tentative_g_score;
+        nodes[neigbor.r][neigbor.c].f = nodes[neigbor.r][neigbor.c].g + calculateHeuristic(euristic, neigbor, end);
+        if(!openList.some(el => compareNodes(el, neigbor))){
+          openList.push(neigbor);
         }
-      }
-      if (closedList.some((el) => el.r === adj.r && el.c === adj.c)) {
-        let node = closedList.filter(
-          (el) => el.r === adj.r && el.c === adj.c
-        )[0];
-        if (node.f < nodes[adj.r][adj.c].f) {
-          continue;
-        }
-      } else {
-        openList.push(successor);
       }
     }
-    closedList.push(nodePicked);
   }
 
   if (!found) {
@@ -96,13 +83,15 @@ export default function AStar(
       shortestPath: [],
     };
   }
+  console.log('building shortest path');
   let current = end;
-  let shortestPath = Array<Coordinate>();
-  while (current && current.r != start.r && current.c != start.c) {
+  var shortestPath = Array<Coordinate>();
+  while (current.r != start.r || current.c != start.c) {
     shortestPath.push(current);
     current = nodes[current.r][current.c].parent!;
   }
   shortestPath.reverse();
+  console.log(shortestPath);
   return {
     orderOfVisit: orderOfVisit,
     shortestPath: shortestPath,

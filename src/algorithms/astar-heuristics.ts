@@ -1,7 +1,7 @@
 import { Coordinate } from "../components/Node/node_data";
 
 const euclidean = (start: Coordinate, end: Coordinate): number => {
-  return Math.sqrt(Math.pow(start.r + end.r, 2) + Math.pow(start.c + end.c, 2));
+  return Math.sqrt(Math.pow(end.r - start.r, 2) + Math.pow(end.c - start.c, 2));
 };
 
 const diagonal = (start: Coordinate, end: Coordinate): number => {

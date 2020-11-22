@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { ALGORITHMS } from "../../algorithms";
+import { Euristic } from "../../algorithms/astar-heuristics";
 import "./header.styles.css";
 interface Props {
   onStart: Function;
@@ -9,8 +11,8 @@ interface Props {
 
 const Header = (props: Props) => {
   const [wallNum, setWallNum] = useState(10);
-  const [algoSelected, setAlgo] = useState("");
-  const [euristic, setEuristic] = useState("manhattan");
+  const [algoSelected, setAlgo] = useState<ALGORITHMS>();
+  const [euristic, setEuristic] = useState(Euristic.MANHATTAN);
   return (
     <>
       <div className="header-bar">
@@ -28,7 +30,7 @@ const Header = (props: Props) => {
           Generate Walls
         </button>
         <button
-          disabled={algoSelected === ""}
+          disabled={algoSelected === undefined}
           className="button start-btn"
           onClick={() => props.onStart(algoSelected, euristic)}
         >
@@ -38,25 +40,31 @@ const Header = (props: Props) => {
           <span className="selector-label">Algorithm: </span>
           <select
             className="select"
-            onChange={(ev) => setAlgo(ev.target.value)}
+            onChange={(ev: any) => setAlgo(ev.target.value)}
           >
             <option hidden disabled selected>
               ---
             </option>
-            <option value="dfs">DFS</option>
-            <option value="bfs">BFS</option>
-            <option value="dijkstra">Dijkstra</option>
-            <option value="a*">A*</option>
+            {Object.values(ALGORITHMS)
+              .filter((a: any) => !isNaN(a))
+              .map((a: any) => (
+                <option value={a}>{ALGORITHMS[a]}</option>
+              ))}
           </select>
 
           <select
-            disabled={algoSelected != "a*"}
+            defaultValue={Euristic.MANHATTAN}
+            disabled={algoSelected != ALGORITHMS.ASTAR}
             className="select"
-            onChange={(ev) => setEuristic(ev.target.value)}
+            onChange={(ev: any) => setEuristic(ev.target.value)}
           >
-            <option value="manhattan">MANHATTAN</option>
-            <option value="euclidean">EUCLIDEAN</option>
-            <option value="diagonal">DIAGONAL</option>
+            <option hidden disabled selected>
+              ---
+            </option>
+            {Object.values(Euristic)              
+              .filter((e: any) => !isNaN(e))
+              .map((e: any) => (<option value={e}>{Euristic[e]}</option>))
+            }
           </select>
         </div>
         <button className="button" onClick={props.resetAnimation}>

@@ -13,8 +13,8 @@ const manhattan = (start: Coordinate, end: Coordinate): number => {
 };
 
 export enum Euristic {
-  EUCLIDEAN,
   MANHATTAN,
+  EUCLIDEAN,
   DIAGONAL,
 }
 

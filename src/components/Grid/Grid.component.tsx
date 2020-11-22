@@ -17,20 +17,8 @@ import "./grid.style.css";
 import Header from "../Header/header.component";
 import AStar from "../../algorithms/astar";
 import { Euristic } from "../../algorithms/astar-heuristics";
+import { ALGORITHMS } from "../../algorithms";
 
-interface Props {}
-
-const getEuristicType = (e: string | undefined): Euristic => {
-  switch (e) {
-    case "manhattan":
-      return Euristic.MANHATTAN;
-    case "diagonal":
-      return Euristic.DIAGONAL;
-    case "euclidean":
-      return Euristic.EUCLIDEAN;
-  }
-  return Euristic.MANHATTAN;
-};
 
 const generateEmptyGrid = () => {
   var grid = Array<Array<GridNode>>();
@@ -52,7 +40,7 @@ const generateEmptyGrid = () => {
 };
 
 
-export const Grid = (props: Props) => {
+export const Grid = () => {
   const [grid, setGrid] = useState(() => {
     return generateEmptyGrid();
   });
@@ -85,12 +73,12 @@ export const Grid = (props: Props) => {
 
   const animateResult = (res: AlgorithmResult) => {
     //animate visited
-    for(let i = 0; i < res.orderOfVisit.length; i++){
+    for (let i = 0; i < res.orderOfVisit.length; i++) {
       let toAnimate = res.orderOfVisit[i];
       if (!toAnimate) {
         return;
       }
-      setTimeout( () => {
+      setTimeout(() => {
         setGrid((g) => {
           return produce(g, (copy) => {
             if (
@@ -101,11 +89,11 @@ export const Grid = (props: Props) => {
             }
           });
         });
-     }, 100);
+      }, 100);
     }
 
     //animate shortest path
-    for(let i = 0; i < res.shortestPath.length; i++){
+    for (let i = 0; i < res.shortestPath.length; i++) {
       let toAnimate = res.shortestPath[i];
       if (!toAnimate) return;
       setTimeout(() => {
@@ -123,22 +111,22 @@ export const Grid = (props: Props) => {
     }
   };
 
-  const start = (algo: string, euristic: string | undefined) => {
+  const start = (algo: ALGORITHMS, euristic: Euristic) => {
     resetAnimation();
     setIsAnimating(true);
     var res: AlgorithmResult = { orderOfVisit: [], shortestPath: [] };
-    switch (algo) {
-      case "dfs":
+    switch (Number(algo)) {
+      case ALGORITHMS.DFS:
         res = iterativeDFS(grid, startCoord, endCoord);
         break;
-      case "dijkstra":
+      case ALGORITHMS.DIJKSTRA:
         res = dijkstra(grid, startCoord, endCoord);
         break;
-      case "bfs":
+      case ALGORITHMS.BFS:
         res = BFS(grid, startCoord, endCoord);
         break;
-      case "a*":
-        res = AStar(grid, startCoord, endCoord, getEuristicType(euristic));
+      case ALGORITHMS.ASTAR:
+        res = AStar(grid, startCoord, endCoord, Number(euristic));
     }
     animateResult(res);
     setIsAnimating(false);
@@ -161,8 +149,8 @@ export const Grid = (props: Props) => {
   };
 
   const addRandomWalls = (amount: number): void => {
-    setGrid(g => {
-      return produce(g, copy => {
+    setGrid((g) => {
+      return produce(g, (copy) => {
         let randX, randY;
         for (let i = 0; i < amount; i++) {
           do {
@@ -174,17 +162,16 @@ export const Grid = (props: Props) => {
       });
     });
   };
-  
 
   return (
     <>
-      <Header 
+      <Header
         onStart={start}
         resetAnimation={resetAnimation}
         resetAll={resetAll}
         randomWalls={addRandomWalls}
-      />     
-      
+      />
+
       <div className="container">
         <div
           className="grid"

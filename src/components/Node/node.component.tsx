@@ -8,8 +8,6 @@ interface Props {
   type: CellType;
   mouseDown: Function;
   mouseEnter: Function;
-  mouseLeave: Function;
-  mouseUp: Function;
 }
 
 const Node = (props: Props) => {
@@ -38,8 +36,6 @@ const Node = (props: Props) => {
     <div
       onMouseDown={() => props.mouseDown()}
       onMouseEnter={() => props.mouseEnter()}
-      onMouseLeave={() => props.mouseLeave()}
-      onMouseUp={() => props.mouseUp()}
       className={`node ${cssClass}`}
       style={{
         width: SQUARE_WIDTH,

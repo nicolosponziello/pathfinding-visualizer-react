@@ -54,6 +54,12 @@ export const Grid = () => {
   const [isDraggingWall, setIsDraggingWall] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
 
+  window.addEventListener('mouseup', () => {
+    setIsDraggingStart(false);
+    setIsDraggingEnd(false);
+    setIsDraggingWall(false);
+  }, false);
+
   const resetAll = () => {
     setGrid((g) => {
       return produce(g, (copy) => {
@@ -197,6 +203,7 @@ export const Grid = () => {
                       } else if (col.type == CellType.END) {
                         setIsDraggingEnd(true);
                       } else {
+                        setIsDraggingWall(true);
                         setGrid((g) => {
                           return produce(g, (copy) => {
                             if (copy[i][j].type === CellType.EMPTY) {
@@ -206,26 +213,29 @@ export const Grid = () => {
                             }
                           });
                         });
-                        setIsDraggingWall(true);
                       }
                     }
                   }}
                   mouseEnter={() => {
                     if (!isAnimating) {
                       if (isDraggingStart) {
-                        setStartCoord({ r: i, c: j });
                         setGrid((g) => {
                           return produce(g, (copy) => {
+                            copy[startCoord.r][startCoord.c].type =
+                             
+                              CellType.EMPTY;
                             copy[i][j].type = CellType.START;
                           });
                         });
+                        setStartCoord({ r: i, c: j });
                       } else if (isDraggingEnd) {
-                        setEndCoord({ r: i, c: j });
                         setGrid((g) => {
                           return produce(g, (copy) => {
+                            copy[endCoord.r][endCoord.c].type = CellType.EMPTY;
                             copy[i][j].type = CellType.END;
                           });
                         });
+                        setEndCoord({ r: i, c: j });
                       } else if (isDraggingWall) {
                         setGrid((g) => {
                           return produce(g, (copy) => {
@@ -238,22 +248,6 @@ export const Grid = () => {
                         });
                       }
                     }
-                  }}
-                  mouseLeave={() => {
-                    if (!isAnimating) {
-                      if (isDraggingStart || isDraggingEnd) {
-                        setGrid((g) => {
-                          return produce(g, (copy) => {
-                            copy[i][j].type = CellType.EMPTY;
-                          });
-                        });
-                      }
-                    }
-                  }}
-                  mouseUp={() => {
-                    setIsDraggingStart(false);
-                    setIsDraggingEnd(false);
-                    setIsDraggingWall(false);
                   }}
                 />
               );

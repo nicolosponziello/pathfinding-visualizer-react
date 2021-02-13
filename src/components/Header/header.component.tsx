@@ -11,7 +11,7 @@ interface Props {
 
 const Header = (props: Props) => {
   const [wallNum, setWallNum] = useState(10);
-  const [algoSelected, setAlgo] = useState<ALGORITHMS>();
+  const [algoSelected, setAlgo] = useState<ALGORITHMS>(ALGORITHMS.BFS);
   const [euristic, setEuristic] = useState(Euristic.MANHATTAN);
   return (
     <>
@@ -30,7 +30,6 @@ const Header = (props: Props) => {
           Generate Walls
         </button>
         <button
-          disabled={algoSelected === undefined}
           className="button start-btn"
           onClick={() => props.onStart(algoSelected, euristic)}
         >
@@ -41,14 +40,14 @@ const Header = (props: Props) => {
           <select
             className="select"
             onChange={(ev: any) => setAlgo(ev.target.value)}
+            defaultValue={ALGORITHMS[0]}
           >
-            <option hidden disabled selected>
-              ---
-            </option>
             {Object.values(ALGORITHMS)
               .filter((a: any) => !isNaN(a))
               .map((a: any) => (
-                <option value={a}>{ALGORITHMS[a]}</option>
+                <option key={a} value={a}>
+                  {ALGORITHMS[a]}
+                </option>
               ))}
           </select>
 
@@ -58,13 +57,15 @@ const Header = (props: Props) => {
             className="select"
             onChange={(ev: any) => setEuristic(ev.target.value)}
           >
-            <option hidden disabled selected>
-              ---
-            </option>
-            {Object.values(Euristic)              
+            {Object.values(Euristic)
               .filter((e: any) => !isNaN(e))
-              .map((e: any) => (<option value={e}>{Euristic[e]}</option>))
-            }
+              .map((e: any) => (
+                <option key={e} value={e}>
+                  
+                  {Euristic[e]}
+                
+                </option>
+              ))}
           </select>
         </div>
         <button className="button" onClick={props.resetAnimation}>

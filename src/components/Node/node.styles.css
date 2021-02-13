@@ -1,6 +1,7 @@
 .node {
     border: 1px solid rgba(153, 145, 145);
     border-radius: 7px;
+    user-select: none;
 }
 
 .empty {

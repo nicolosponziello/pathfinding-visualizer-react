@@ -3,6 +3,7 @@
     height: 10vh;
     display: flex;
     flex-direction: row;
+    flex-wrap: wrap;
     justify-content: space-around;
     align-items: center;
     background-color: #0D3B66;
@@ -18,7 +19,7 @@
 
 .button {
     background-color: rgb(243, 243, 146);
-    padding: 10px;
+    padding: 5px;
     font-size: medium;
     border-radius: 10px;
 }
@@ -39,4 +40,5 @@
 .input {
     border-radius: 10px;
     padding: 5px;
+    width: 50px
 }

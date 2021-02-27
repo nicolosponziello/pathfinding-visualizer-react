@@ -18,6 +18,9 @@ import Header from "../Header/header.component";
 import AStar from "../../algorithms/astar";
 import { Euristic } from "../../algorithms/astar-heuristics";
 import { ALGORITHMS } from "../../algorithms";
+import { treeMazeGenerator } from "../../algorithms/maze-generation/tree-generator";
+import { dfsMazeGenerator } from "../../algorithms/maze-generation/dfs-generator";
+import { sidewinderMazeGenerator } from "../../algorithms/maze-generation/sidewinder-generator";
 
 
 const generateEmptyGrid = () => {
@@ -154,6 +157,12 @@ export const Grid = () => {
     });
   };
 
+  const generateMaze = (): void => {
+    setGrid((g) => {
+      return treeMazeGenerator(startCoord, endCoord);
+    });
+  };
+
   const addRandomWalls = (amount: number): void => {
     setGrid((g) => {
       return produce(g, (copy) => {
@@ -176,6 +185,7 @@ export const Grid = () => {
         resetAnimation={resetAnimation}
         resetAll={resetAll}
         randomWalls={addRandomWalls}
+        generateMaze={generateMaze}
       />
 
       <div className="container">
@@ -222,7 +232,6 @@ export const Grid = () => {
                         setGrid((g) => {
                           return produce(g, (copy) => {
                             copy[startCoord.r][startCoord.c].type =
-                             
                               CellType.EMPTY;
                             copy[i][j].type = CellType.START;
                           });

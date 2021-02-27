@@ -7,6 +7,7 @@ interface Props {
   randomWalls: Function;
   resetAnimation: () => void;
   resetAll: () => void;
+  generateMaze: () => void;
 }
 
 const Header = (props: Props) => {
@@ -28,6 +29,9 @@ const Header = (props: Props) => {
         </label>
         <button className="button" onClick={() => props.randomWalls(wallNum)}>
           Generate Walls
+        </button>
+        <button className="button" onClick={props.generateMaze}>
+          Generate Maze
         </button>
         <button
           className="button start-btn"
@@ -61,9 +65,7 @@ const Header = (props: Props) => {
               .filter((e: any) => !isNaN(e))
               .map((e: any) => (
                 <option key={e} value={e}>
-                  
                   {Euristic[e]}
-                
                 </option>
               ))}
           </select>

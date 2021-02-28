@@ -159,7 +159,8 @@ export const Grid = () => {
 
   const generateMaze = (): void => {
     setGrid((g) => {
-      return treeMazeGenerator(startCoord, endCoord);
+      //return treeMazeGenerator(startCoord, endCoord);
+      return dfsMazeGenerator(startCoord, endCoord);
     });
   };
 

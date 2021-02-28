@@ -25,6 +25,7 @@ import { MazeGenAlgorithms } from "../../algorithms/maze-generation/MazeGenerati
 
 
 import { version } from "../../../package.json";
+import html2canvas from "html2canvas";
 
 
 const generateEmptyGrid = () => {
@@ -191,6 +192,29 @@ export const Grid = () => {
     });
   };
 
+  const generateIMG = async () => {
+    html2canvas(document.querySelector("#capture")! as HTMLElement).then(
+      (canvas) => {
+        var link = document.createElement("a");
+        if (typeof link.download === "string") {
+          link.href = canvas.toDataURL();
+          link.download = "bajash.png";
+
+          //Firefox requires the link to be in the body
+          document.body.appendChild(link);
+
+          //simulate click
+          link.click();
+
+          //remove the link when done
+          document.body.removeChild(link);
+        } else {
+          window.open("");
+        }
+      }
+    );
+  };
+
   return (
     <>
       <Header
@@ -199,9 +223,10 @@ export const Grid = () => {
         resetAll={resetAll}
         randomWalls={addRandomWalls}
         generateMaze={generateMaze}
+        generateIMG={generateIMG}
       />
 
-      <div className="container">
+      <div className="container" id="capture">
         <div
           className="grid"
           style={{

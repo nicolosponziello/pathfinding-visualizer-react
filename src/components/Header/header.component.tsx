@@ -9,6 +9,7 @@ interface Props {
   resetAnimation: () => void;
   resetAll: () => void;
   generateMaze: (algo: MazeGenAlgorithms) => void;
+  generateIMG: () => void;
 }
 
 const Header = (props: Props) => {
@@ -90,6 +91,9 @@ const Header = (props: Props) => {
         </button>
         <button className="button" onClick={props.resetAll}>
           Reset All
+        </button>
+        <button className="button" onClick={props.generateIMG}>
+          Save as IMG
         </button>
       </div>
     </>

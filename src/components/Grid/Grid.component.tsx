@@ -24,6 +24,9 @@ import { sidewinderMazeGenerator } from "../../algorithms/maze-generation/sidewi
 import { MazeGenAlgorithms } from "../../algorithms/maze-generation/MazeGenerationAlgorithms";
 
 
+import { version } from "../../../package.json";
+
+
 const generateEmptyGrid = () => {
   var grid = Array<Array<GridNode>>();
   for (var i = 0; i < V_CELLS_NUM; i++) {
@@ -273,6 +276,9 @@ export const Grid = () => {
             });
           })}
         </div>
+      </div>
+      <div className="version-row">
+        <p>Version: {version}</p>
       </div>
     </>
   );

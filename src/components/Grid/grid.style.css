@@ -6,4 +6,16 @@
     box-shadow: 7px 7px 5px 5px #124370;
 }
 
+.version-row{
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    padding: 15px;
+}
+.version-row > p{
+    color: white;
+    text-align: end;
+
+}
+
   

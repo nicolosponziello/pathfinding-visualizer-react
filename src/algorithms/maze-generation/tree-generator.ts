@@ -29,7 +29,6 @@ export function treeMazeGenerator(
   for (i = 0; i < V_CELLS_NUM; i++) {
     for (j = 0; j < H_CELLS_NUM; j++) {
       var dir = getRandomDirection();
-      console.log(dir);
       //leave a border around the screen
       var newRow = Math.floor(
         Math.min(V_CELLS_NUM - 1, Math.max(i + dir.r, 1))

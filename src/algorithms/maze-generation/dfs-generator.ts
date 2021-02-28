@@ -4,6 +4,7 @@ import {
   GridNode,
 } from "../../components/Node/node_data";
 import { V_CELLS_NUM, H_CELLS_NUM } from "../../constants";
+var _ = require("lodash");
 
 var directions: Array<Coordinate> = [
   { r: +1, c: 0 },
@@ -12,16 +13,21 @@ var directions: Array<Coordinate> = [
   { r: 0, c: -1 },
 ];
 
+//start at start cell
+// generate all neighbours and mark them as visited
+// open a random passage
+// the open cell is then pushed on the stack
+
 export function dfsMazeGenerator(
   start: Coordinate,
   end: Coordinate
 ): Array<Array<GridNode>> {
   //generate grid
   var grid = Array<Array<GridNode>>();
-  var visited = Array<Array<Boolean>>();
+  var visited = Array<Array<boolean>>();
   for (var i = 0; i < V_CELLS_NUM; i++) {
     var el = Array<GridNode>();
-    var b = Array<Boolean>();
+    var b = Array<boolean>();
     for (var j = 0; j < H_CELLS_NUM; j++) {
       el.push({
         row: i,
@@ -33,8 +39,7 @@ export function dfsMazeGenerator(
     grid.push(el);
     visited.push(b);
   }
-  grid[start.r][start.c].type = CellType.START;
-  grid[grid.length - 5][grid[0].length - 5].type = CellType.END;
+  
 
   var stack: Array<Coordinate> = [];
   stack.push(start);
@@ -42,33 +47,35 @@ export function dfsMazeGenerator(
   visited[current.r][current.c] = true;
   while (stack.length > 0) {
     current = stack.pop()!;
-    if (current === undefined) break;
 
-    visited[current.r][current.c] = true;
+    if (current === undefined) break;
 
     //check neighbours
     var neighbours: Array<Coordinate> = [];
     directions.forEach((dir) => {
       if (
-        check({ r: current.r + dir.r, c: current.c + dir.c }) &&
-        !visited[current.r + dir.r][current.c + dir.c]
+        check({ r: current.r + dir.r, c: current.c + dir.c })
       ) {
-        neighbours.push({ r: current.r + dir.r, c: current.c + dir.c });
+        if(!visited[current.r+dir.r][current.c+dir.c])
+          neighbours.push({ r: current.r + dir.r, c: current.c + dir.c });
       }
     });
-    //randomly add to the stack
-    var randomIdx = Math.floor(Math.random() * neighbours.length);
-    neighbours.forEach((n, idx) => {
-      if (
-        grid[n.r][n.c].type != CellType.START &&
-        grid[n.r][n.c].type != CellType.END
-      ) {
-        grid[n.r][n.c].type = CellType.EMPTY;
-      }
-      if (randomIdx != idx) stack.push(n);
-    });
-    stack.push(neighbours[randomIdx]);
+    //randomly open a neighbour and add it to the stack
+    if(neighbours.length > 0){
+      var neighbour: Coordinate = _.sample(neighbours);
+      grid[neighbour.r][neighbour.c].type = CellType.EMPTY;
+      grid[current.r][current.c].type = CellType.EMPTY;
+      neighbours.forEach(n => visited[n.r][n.c] = true);
+      neighbours.forEach(n => {
+        if (n != neighbour)
+          stack.push(n);
+      });
+      stack.push(neighbour);
+    }
   }
+
+  grid[start.r][start.c].type = CellType.START;
+  grid[end.r][end.c].type = CellType.END;
 
   return grid;
 }
@@ -80,8 +87,4 @@ function check(coord: Coordinate): boolean {
     coord.c > 0 &&
     coord.c < H_CELLS_NUM - 1
   );
-}
-
-function getRandomDirection(): Coordinate {
-  return directions[Math.floor(Math.random() * directions.length)];
 }

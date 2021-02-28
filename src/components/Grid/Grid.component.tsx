@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import { H_CELLS_NUM, SQUARE_WIDTH, V_CELLS_NUM } from "../../constants";
 import Node from "../Node/node.component";
 import { produce } from "immer";
@@ -25,10 +25,6 @@ import { MazeGenAlgorithms } from "../../algorithms/maze-generation/MazeGenerati
 
 
 import { version } from "../../../package.json";
-import {
-  exportComponentAsJPEG,
-  exportComponentAsPNG,
-} from "react-component-export-image";
 
 
 const generateEmptyGrid = () => {
@@ -64,8 +60,6 @@ export const Grid = () => {
   const [isDraggingEnd, setIsDraggingEnd] = useState(false);
   const [isDraggingWall, setIsDraggingWall] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
-
-  const gridRef = useRef<HTMLDivElement>(null);
 
   window.addEventListener('mouseup', () => {
     setIsDraggingStart(false);
@@ -197,10 +191,6 @@ export const Grid = () => {
     });
   };
 
-  const savePNG = () => {
-    exportComponentAsJPEG(gridRef);
-  };
-
   return (
     <>
       <Header
@@ -209,12 +199,10 @@ export const Grid = () => {
         resetAll={resetAll}
         randomWalls={addRandomWalls}
         generateMaze={generateMaze}
-        saveIMG={savePNG}
       />
 
       <div className="container">
         <div
-          ref={gridRef}
           className="grid"
           style={{
             display: "grid",

@@ -1,19 +1,21 @@
 import React, { useState } from "react";
 import { ALGORITHMS } from "../../algorithms";
 import { Euristic } from "../../algorithms/astar-heuristics";
+import { MazeGenAlgorithms } from "../../algorithms/maze-generation/MazeGenerationAlgorithms";
 import "./header.styles.css";
 interface Props {
   onStart: Function;
   randomWalls: Function;
   resetAnimation: () => void;
   resetAll: () => void;
-  generateMaze: () => void;
+  generateMaze: (algo: MazeGenAlgorithms) => void;
 }
 
 const Header = (props: Props) => {
   const [wallNum, setWallNum] = useState(10);
   const [algoSelected, setAlgo] = useState<ALGORITHMS>(ALGORITHMS.BFS);
   const [euristic, setEuristic] = useState(Euristic.MANHATTAN);
+  const [mazeAlgo, setMazeAlgo] = useState(MazeGenAlgorithms.BACKTRACKING);
   return (
     <>
       <div className="header-bar">
@@ -30,7 +32,20 @@ const Header = (props: Props) => {
         <button className="button" onClick={() => props.randomWalls(wallNum)}>
           Generate Walls
         </button>
-        <button className="button" onClick={props.generateMaze}>
+        <select
+          className="select"
+          onChange={(ev: any) => setMazeAlgo(ev.target.value)}
+          defaultValue={MazeGenAlgorithms[0]}
+        >
+          {Object.values(MazeGenAlgorithms)
+            .filter((a: any) => !isNaN(a))
+            .map((a: any) => (
+              <option key={a} value={a}>
+                {MazeGenAlgorithms[a]}
+              </option>
+            ))}
+        </select>
+        <button className="button" onClick={() => props.generateMaze(mazeAlgo)}>
           Generate Maze
         </button>
         <button

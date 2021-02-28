@@ -21,6 +21,7 @@ import { ALGORITHMS } from "../../algorithms";
 import { treeMazeGenerator } from "../../algorithms/maze-generation/tree-generator";
 import { dfsMazeGenerator } from "../../algorithms/maze-generation/dfs-generator";
 import { sidewinderMazeGenerator } from "../../algorithms/maze-generation/sidewinder-generator";
+import { MazeGenAlgorithms } from "../../algorithms/maze-generation/MazeGenerationAlgorithms";
 
 
 const generateEmptyGrid = () => {
@@ -157,10 +158,18 @@ export const Grid = () => {
     });
   };
 
-  const generateMaze = (): void => {
+  const generateMaze = (algo: MazeGenAlgorithms): void => {
     setGrid((g) => {
-      //return treeMazeGenerator(startCoord, endCoord);
-      return dfsMazeGenerator(startCoord, endCoord);
+      switch   (Number(algo))   {
+        case MazeGenAlgorithms.BACKTRACKING:
+          return dfsMazeGenerator(startCoord, endCoord);
+        case MazeGenAlgorithms.SIDEWINDER:
+          return sidewinderMazeGenerator(startCoord, endCoord);
+        case MazeGenAlgorithms.TREE:
+          return treeMazeGenerator(startCoord, endCoord);
+        default:
+          return dfsMazeGenerator(startCoord, endCoord);
+      }
     });
   };
 

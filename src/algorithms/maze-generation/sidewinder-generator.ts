@@ -12,9 +12,9 @@ export function sidewinderMazeGenerator(
 ): Array<Array<GridNode>> {
   //generate grid
   var grid = Array<Array<GridNode>>();
-  for (var i = 0; i < V_CELLS_NUM; i++) {
+  for (let i = 0; i < V_CELLS_NUM; i++) {
     var el = Array<GridNode>();
-    for (var j = 0; j < H_CELLS_NUM; j++) {
+    for (let j = 0; j < H_CELLS_NUM; j++) {
       el.push({
         row: i,
         col: j,
@@ -24,38 +24,30 @@ export function sidewinderMazeGenerator(
     grid.push(el);
   }
 
-  var runSet = [];
+  //first row is always empty
+  for (let col = 0; col < H_CELLS_NUM; col++) {
+    grid[1][col].type = CellType.EMPTY;
+  }
 
-  for (i = 0; i < V_CELLS_NUM; i++) {
-    var current = { r: i, c: 0 };
-    while (current.c < H_CELLS_NUM) {
-      //should we carve a passage on EAST?
-      runSet.push(current);
+  for (let row = 2; row < V_CELLS_NUM; row += 2) {
+    var runSet = [];
+    for (let col = 1; col < H_CELLS_NUM; col += 2)  {
+      grid[row][col].type = CellType.EMPTY;
+      runSet.push({  r: row, c: col  });
+      let carveEast = Math.random() > 0.5;
 
-      var carveEast = _.sample([true, false]);
-      if (carveEast) {
-        if (current.c + 1 < H_CELLS_NUM) {
-          grid[i][current.c].type = CellType.EMPTY;
-          grid[i][current.c + 1].type = CellType.EMPTY;
-        }
-        current.c = current.c + 1;
-      } else {
-        var cell = _.sample(runSet);
-        //carve a passage on north of this cell
-        if (cell.r - 1 >= 0 && cell.c < H_CELLS_NUM) {
-          grid[cell.r - 1][cell.c].type = CellType.EMPTY;
-        }
+      if   (carveEast && col < H_CELLS_NUM -   2)   {
+        grid[row][col   +   1].type = CellType.EMPTY;
+      }   else   {
+        let randomCell = _.sample(runSet);
+        grid[randomCell.r -   1][randomCell.c].type = CellType.EMPTY;
         runSet = [];
-        if (runSet.length > 0) {
-          console.log("not zero");
-        }
-        current.c += 1;
       }
     }
   }
 
   grid[start.r][start.c].type = CellType.START;
-  grid[grid.length - 5][grid[0].length - 5].type = CellType.END;
+  grid[end.r][end.c].type = CellType.END;
 
   return grid;
 }

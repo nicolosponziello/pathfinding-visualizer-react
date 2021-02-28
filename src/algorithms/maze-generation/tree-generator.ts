@@ -23,8 +23,6 @@ export function treeMazeGenerator(
     }
     grid.push(el);
   }
-  grid[start.r][start.c].type = CellType.START;
-  grid[grid.length - 5][grid[0].length - 5].type = CellType.END;
 
   for (i = 0; i < V_CELLS_NUM; i++) {
     for (j = 0; j < H_CELLS_NUM; j++) {
@@ -45,6 +43,9 @@ export function treeMazeGenerator(
       }
     }
   }
+
+  grid[start.r][start.c].type = CellType.START;
+  grid[end.r][end.c].type = CellType.END;
 
   return grid;
 }

@@ -203,22 +203,26 @@ export const Grid = () => {
   const generateIMG = async () => {
     html2canvas(document.querySelector("#capture")! as HTMLElement).then(
       (canvas) => {
-        var link = document.createElement("a");
-        if (typeof link.download === "string") {
-          link.href = canvas.toDataURL();
-          link.download = "bajash.png";
+        canvas.toBlob(
+          (b) => {
+              var link = document.createElement("a");
+              link.href = URL.createObjectURL(b);
+              link.download = "screenshot";
 
-          //Firefox requires the link to be in the body
-          document.body.appendChild(link);
-
-          //simulate click
-          link.click();
-
-          //remove the link when done
-          document.body.removeChild(link);
-        } else {
-          window.open("");
-        }
+              //Firefox requires the link to be in the body
+              document.body.appendChild(link);
+    
+              //simulate click
+              link.click();
+    
+              //remove the link when done
+              document.body.removeChild(link);
+              console.log("download");
+            },
+            "image/jpeg",
+            1
+          );
+         
       }
     );
   };

@@ -86,6 +86,7 @@ export const Grid = () => {
   };
 
   const animateResult = (res: AlgorithmResult) => {
+    setIsAnimating(true);
     //animate visited
     for (let i = 0; i < res.orderOfVisit.length; i++) {
       let toAnimate = res.orderOfVisit[i];
@@ -103,7 +104,7 @@ export const Grid = () => {
             }
           });
         });
-      }, 100);
+      }, 80);
     }
 
     //animate shortest path
@@ -119,31 +120,35 @@ export const Grid = () => {
             ) {
               copy[toAnimate.r][toAnimate.c].type = CellType.SHORTEST_PATH;
             }
+            //check if it is the last one
+            if (i == res.shortestPath.length - 1) {
+              setIsAnimating(false);
+            }
           });
         });
-      }, 100);
+      }, 80);
     }
   };
 
   const start = (algo: ALGORITHMS, euristic: Euristic) => {
-    resetAnimation();
-    setIsAnimating(true);
-    var res: AlgorithmResult = { orderOfVisit: [], shortestPath: [] };
-    switch (Number(algo)) {
-      case ALGORITHMS.DFS:
-        res = iterativeDFS(grid, startCoord, endCoord);
-        break;
-      case ALGORITHMS.DIJKSTRA:
-        res = dijkstra(grid, startCoord, endCoord);
-        break;
-      case ALGORITHMS.BFS:
-        res = BFS(grid, startCoord, endCoord);
-        break;
-      case ALGORITHMS.ASTAR:
-        res = AStar(grid, startCoord, endCoord, Number(euristic));
+    if (!isAnimating) {
+      resetAnimation();
+      var res: AlgorithmResult = { orderOfVisit: [], shortestPath: [] };
+      switch (Number(algo)) {
+        case ALGORITHMS.DFS:
+          res = iterativeDFS(grid, startCoord, endCoord);
+          break;
+        case ALGORITHMS.DIJKSTRA:
+          res = dijkstra(grid, startCoord, endCoord);
+          break;
+        case ALGORITHMS.BFS:
+          res = BFS(grid, startCoord, endCoord);
+          break;
+        case ALGORITHMS.ASTAR:
+          res = AStar(grid, startCoord, endCoord, Number(euristic));
+      }
+      animateResult(res);
     }
-    animateResult(res);
-    setIsAnimating(false);
   };
 
   const resetAnimation = () => {

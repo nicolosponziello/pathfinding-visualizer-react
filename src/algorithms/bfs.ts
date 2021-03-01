@@ -72,7 +72,6 @@ export default function BFS(
     current = parents[current.r][current.c];
   }
   shortestPath.reverse();
-  console.log("bfs completed");
   return {
     orderOfVisit: orderOfVisit,
     shortestPath: shortestPath,

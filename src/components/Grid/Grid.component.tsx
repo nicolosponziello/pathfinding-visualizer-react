@@ -61,6 +61,7 @@ export const Grid = () => {
   const [isDraggingEnd, setIsDraggingEnd] = useState(false);
   const [isDraggingWall, setIsDraggingWall] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [algoTime, setAlgoTime] = useState(0);
 
   window.addEventListener('mouseup', () => {
     setIsDraggingStart(false);
@@ -134,6 +135,7 @@ export const Grid = () => {
     if (!isAnimating) {
       resetAnimation();
       var res: AlgorithmResult = { orderOfVisit: [], shortestPath: [] };
+      let startTime = Date.now();
       switch (Number(algo)) {
         case ALGORITHMS.DFS:
           res = iterativeDFS(grid, startCoord, endCoord);
@@ -147,6 +149,7 @@ export const Grid = () => {
         case ALGORITHMS.ASTAR:
           res = AStar(grid, startCoord, endCoord, Number(euristic));
       }
+      setAlgoTime(Date.now() - startTime);
       animateResult(res);
     }
   };
@@ -230,7 +233,9 @@ export const Grid = () => {
         generateMaze={generateMaze}
         generateIMG={generateIMG}
       />
-
+      <span className="time-row">
+        <p>Time: {algoTime}ms</p>
+      </span>
       <div className="container" id="capture">
         <div
           className="grid"

@@ -15,7 +15,19 @@
 .version-row > p{
     color: white;
     text-align: end;
+}
 
+.time-row {
+    margin-top: 0px;
+    padding-top: 0px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
+    padding-right: 15px;
+}
+.time-row > p {
+    color: white;
+    text-align: end;
 }
 
   

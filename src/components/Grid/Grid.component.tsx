@@ -190,11 +190,10 @@ export const Grid = () => {
       return produce(g, (copy) => {
         let randX, randY;
         for (let i = 0; i < amount; i++) {
-          do {
-            randX = randomInteger(0, grid.length - 1);
-            randY = randomInteger(0, grid[0].length - 1);
-          } while (copy[randX][randY].type != CellType.EMPTY);
-          copy[randX][randY].type = CellType.WALL;
+          randX = randomInteger(0, grid.length - 1);
+          randY = randomInteger(0, grid[0].length - 1);
+          if(copy[randX][randY].type != CellType.START && copy[randX][randY].type != CellType.END)
+            copy[randX][randY].type = CellType.WALL;
         }
       });
     });

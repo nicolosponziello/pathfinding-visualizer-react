@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ALGORITHMS } from "../../algorithms";
-import { Euristic } from "../../algorithms/astar-heuristics";
+import { Euristic } from "../../algorithms/heuristics";
 import { MazeGenAlgorithms } from "../../algorithms/maze-generation/MazeGenerationAlgorithms";
 import "./header.styles.css";
 interface Props {

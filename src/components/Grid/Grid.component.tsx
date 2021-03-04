@@ -16,7 +16,7 @@ import BFS from "../../algorithms/bfs";
 import "./grid.style.css";
 import Header from "../Header/header.component";
 import AStar from "../../algorithms/astar";
-import { Euristic } from "../../algorithms/astar-heuristics";
+import { Euristic } from "../../algorithms/heuristics";
 import { ALGORITHMS } from "../../algorithms";
 import { treeMazeGenerator } from "../../algorithms/maze-generation/tree-generator";
 import { dfsMazeGenerator } from "../../algorithms/maze-generation/dfs-generator";

@@ -3,7 +3,7 @@ import {
   Coordinate,
   GridNode,
 } from "../components/Node/node_data";
-import { calculateHeuristic, Euristic } from "./astar-heuristics";
+import { calculateHeuristic, Euristic } from "./heuristics";
 import { compareNodes, getAdjNodes } from "./common";
 
 export default function AStar(

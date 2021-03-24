@@ -92,9 +92,6 @@ const Header = (props: Props) => {
         <button className="button" onClick={props.resetAll}>
           Reset All
         </button>
-        <button className="button" onClick={props.generateIMG}>
-          Save as IMG
-        </button>
       </div>
     </>
   );

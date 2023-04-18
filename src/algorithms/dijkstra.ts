@@ -38,10 +38,13 @@ export default function dijkstra(
   while (!found && nodesToVisit.length) {
     //sort remaining nodes by distance
     nodesToVisit.sort((a, b) => dist[a.r][a.c] - dist[b.r][b.c]);
-    const closest = nodesToVisit.shift()!;
+    const closest = nodesToVisit.shift();
+    if (!closest){
+      break;
+    }
 
     //hit a wall
-    if (grid[closest?.r][closest?.c].type === CellType.WALL) {
+    if (grid[closest.r][closest.c].type == CellType.WALL) {
       continue;
     }
 

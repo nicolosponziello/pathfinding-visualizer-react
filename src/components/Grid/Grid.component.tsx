@@ -205,7 +205,7 @@ export const Grid = () => {
         canvas.toBlob(
           (b) => {
               var link = document.createElement("a");
-              link.href = URL.createObjectURL(b);
+              link.href = URL.createObjectURL(b as Blob);
               link.download = "screenshot";
 
               //Firefox requires the link to be in the body

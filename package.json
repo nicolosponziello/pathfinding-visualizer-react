@@ -4,29 +4,25 @@
   "private": true,
   "homepage": "http://nicolosponziello.github.io/pathfinding-visualizer-react",
   "dependencies": {
-    "@testing-library/jest-dom": "^5.11.5",
-    "@testing-library/react": "^11.1.0",
-    "@testing-library/user-event": "^12.1.10",
-    "@types/jest": "^26.0.15",
-    "@types/node": "^12.19.3",
-    "@types/react": "^16.9.55",
-    "@types/react-dom": "^16.9.9",
-    "html2canvas": "^1.0.0-rc.7",
-    "immer": "^7.0.14",
+    "@types/node": "^18.15.11",
+    "@types/react": "^18.0.37",
+    "@types/react-dom": "^18.0.11",
+    "html2canvas": "^1.4.1",
+    "immer": "^10.0.1",
     "lodash": "^4.17.21",
-    "react": "^17.0.1",
+    "react": "^18.2.0",
     "react-component-export-image": "^1.0.5",
-    "react-dom": "^17.0.1",
-    "react-scripts": "4.0.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "^2.1.3",
     "styled-components": "^5.2.1",
-    "typescript": "^4.0.5",
-    "web-vitals": "^0.2.4"
+    "typescript": "^5.0.4",
+    "web-vitals": "^3.3.1"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
+    "start": "react-scripts --openssl-legacy-provider start",
+    "build": "react-scripts --openssl-legacy-provider build",
+    "test": "react-scripts --openssl-legacy-provider test",
+    "eject": "react-scripts --openssl-legacy-provider eject",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   },
@@ -49,6 +45,6 @@
     ]
   },
   "devDependencies": {
-    "gh-pages": "^3.1.0"
+    "gh-pages": "^5.0.0"
   }
 }
